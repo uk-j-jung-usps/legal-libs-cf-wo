@@ -53,23 +53,6 @@
 		<td  width=15% align="right" class=TextMaingr >Mr. / Ms. </td>
 		<td>
 
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_prefix" size="1" tabindex=1>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="Mr.">Mr.</option>
-						<option value="Ms." >Ms.</option>
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="comp_prefix" size="1" tabindex=1>
-							<option value="#comp_prefix#" selected="selected">#comp_prefix#</option>
-						<option value="Mr.">Mr.</option>
-						<option value="Ms." >Ms.</option>				
-					</select>
-				</cfoutput>		
-			</cfif>--->
-            
-
 				<cfoutput>
 					<select name="comp_prefix" size="1" tabindex=1>
 						<option value="Mr." <cfif isdefined('comp_prefix') AND comp_prefix eq 'Mr.'> selected="selected" </cfif>>Mr.</option>
@@ -88,32 +71,7 @@
 	<tr>
 		<td  align="right" class=TextMaingr >he / she / they </td>
 		<td>
-<!---            <cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_pronoun1" size="1" tabindex=2>
-						<!---<option value="">Select One...</option>--->	
-						<option value="he">he</option>
-						<option value="she" >she</option>
-						<option value="they" >they</option>					
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="comp_pronoun1" size="1" tabindex=1>
-						<option value="#comp_pronoun1#" selected="selected">#comp_pronoun1#</option>
-						<option value="he">he</option>
-						<option value="she" >she</option>
-						<option value="they" >they</option>				
-					</select>
-				</cfoutput>		
-			</cfif>--->
-            
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_pronoun1" size="1" tabindex=2>
-						<!---<option value="">Select One...</option>--->	
-						<option value="he">he</option>
-						<option value="she" >she</option>
-						<option value="they" >they</option>					
-				</select>
-			<cfelse>--->
+
 				<cfoutput>
 					<select name="comp_pronoun1" size="1" tabindex=1>
 						<!---<option value="#comp_pronoun1#" selected="selected">#comp_pronoun1#</option>--->
@@ -136,33 +94,7 @@
 	<tr>
 		<td  align="right" class=TextMaingr>his / her / their </td>
 		<td >
-			
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_pronoun2" size="1" tabindex=3>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="his">his</option>
-						<option value="her" >her</option>
-						<option value="their" >their</option>					
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="comp_pronoun2" size="1" tabindex=1>
-						<option value="#comp_pronoun2#" selected="selected">#comp_pronoun2#</option>
-						<option value="his">his</option>
-						<option value="her" >her</option>
-						<option value="their" >their</option>				
-					</select>
-				</cfoutput>		
-			</cfif>	--->
-            
-<!---            <cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_pronoun2" size="1" tabindex=3>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="his">his</option>
-						<option value="her" >her</option>
-						<option value="their" >their</option>					
-				</select>
-			<cfelse>--->
+
 				<cfoutput>
 					<select name="comp_pronoun2" size="1" tabindex=1>
 						<!---<option value="#comp_pronoun2#" selected="selected">#comp_pronoun2#</option>--->
@@ -177,33 +109,7 @@
 		
 		<td  width=10% align="right" class=TextMaingr>AJ Title </td>
 		<td >
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="aj_title" size="1" tabindex=30>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="Administrative Judge">Administrative Judge</option>
-						<option value="Supervisory Administrative Judge" >Supervisory Administrative Judge</option>
-						<option value="Chief Administrative Judge">Chief Administrative Judge</option>
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="aj_title" size="1" tabindex=35>
-							<option value="#aj_title#" selected="selected">#aj_title#</option>				
-							<option value="Administrative Judge">Administrative Judge</option>
-							<option value="Supervisory Administrative Judge" >Supervisory Administrative Judge</option>
-							<option value="Chief Administrative Judge">Chief Administrative Judge</option>							
-					</select>
-				</cfoutput>		
-			</cfif>	--->
-            
-            
-<!---            <cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="aj_title" size="1" tabindex=30>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="Administrative Judge">Administrative Judge</option>
-						<option value="Supervisory Administrative Judge" >Supervisory Administrative Judge</option>
-						<option value="Chief Administrative Judge">Chief Administrative Judge</option>
-				</select>
-			<cfelse>--->
+
 				<cfoutput>
 					<select name="aj_title" size="1" tabindex=35>
 							<!---<option value="#aj_title#" selected="selected">#aj_title#</option>--->				
@@ -240,54 +146,7 @@
 		
 		<td  width=10% align="right" class=TextMaingr>EEOC Office </td>
 		<td >
-<!---		<cfif not qry_last_submitted_data.RecordCount gt 0>
-			<select name="eeoc_office" size="1" tabindex=35>
-					<option value="Chicago District">Chicago District</option>
-					<option value="Los Angeles District">Los Angeles District</option>
-					<option value="San Francisco District" >San Francisco District</option>
-					<option value="Phoenix District" >Phoenix District</option>					
-					<option value="Albuquerque District" >Albuquerque District</option>					
-					<option value="Denver Field Office" >Denver Field Office</option>		
-					<option value="St. Louis District" >St. Louis District</option>	
-					<option value="Minneapolis Area Office" >Minneapolis Area Office</option>
-					<option value="Seattle Field Office">Seattle Field Office</option>
-					<option value="New Orleans Field Office">New Orleans Field Office</option>
-					<option value="Houston District">Houston District</option>
-			</select>
-		<cfelse>
-		<cfoutput>
-			<select name="eeoc_office" size="1" tabindex=35>
-					<option value="#eeoc_office#" selected="selected">#eeoc_office#</option>
-					<option value="Chicago District">Chicago District</option>
-					<option value="Los Angeles District">Los Angeles District</option>
-					<option value="San Francisco District" >San Francisco District</option>					
-					<option value="Phoenix District" >Phoenix District</option>
-					<option value="Albuquerque District" >Albuquerque District</option>	
-					<option value="Denver Field Office" >Denver Field Office</option>			
-					<option value="St. Louis District" >St. Louis District</option>	
-					<option value="Minneapolis Area Office" >Minneapolis Area Office</option>
-					<option value="Seattle Field Office">Seattle Field Office</option>
-					<option value="New Orleans Field Office">New Orleans Field Office</option>
-					<option value="Houston District">Houston District</option>
-				</select>
-		</cfoutput>		
-		</cfif>--->
-        
-<!---        		<cfif not qry_last_submitted_data.RecordCount gt 0>
-			<select name="eeoc_office" size="1" tabindex=35>
-					<option value="Chicago District">Chicago District</option>
-					<option value="Los Angeles District">Los Angeles District</option>
-					<option value="San Francisco District" >San Francisco District</option>
-					<option value="Phoenix District" >Phoenix District</option>					
-					<option value="Albuquerque District" >Albuquerque District</option>					
-					<option value="Denver Field Office" >Denver Field Office</option>		
-					<option value="St. Louis District" >St. Louis District</option>	
-					<option value="Minneapolis Area Office" >Minneapolis Area Office</option>
-					<option value="Seattle Field Office">Seattle Field Office</option>
-					<option value="New Orleans Field Office">New Orleans Field Office</option>
-					<option value="Houston District">Houston District</option>
-			</select>
-		<cfelse>--->
+
 		<cfoutput>
 			<select name="eeoc_office" size="1" tabindex=35>
 					<!---<option value="#eeoc_office#" selected="selected">#eeoc_office#</option>--->
@@ -358,39 +217,9 @@
 				where b.entity_role = 'LRMGR' and a.entity_key = b.entity_key and b.group_prefix='WO' order by sort_fld
              </cfquery>
       
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-				<select name="lr_mgr" tabindex=38>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_lr_mgr">
-		        <option value="#name#" >#name#
-		      </cfoutput>
-      	</select>
-      <cfelse>
+
 
 					<select name="lr_mgr" size="1" tabindex=35>
-							<cfoutput>
-							<option value="#lr_mgr#" selected="selected">#lr_mgr#</option>
-							</cfoutput>
-				     	<cfoutput query="qry_lr_mgr">
-				        <option value="#name#" >#name#
-				      </cfoutput>							
-					</select>
-
-      </cfif>--->
-      
-<!---      <cfif not qry_last_submitted_data.RecordCount gt 0>      
-				<select name="lr_mgr" tabindex=38>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_lr_mgr">
-		        <option value="#name#" >#name#
-		      </cfoutput>
-      	</select>
-      <cfelse>--->
-
-					<select name="lr_mgr" size="1" tabindex=35>
-<!---							<cfoutput>
-							<option value="#lr_mgr#" selected="selected">#lr_mgr#</option>
-							</cfoutput>--->
 				     	<cfoutput query="qry_lr_mgr">
 				        <option value="#name#" <cfif isdefined('lr_mgr') AND qry_lr_mgr.name eq lr_mgr>selected="selected" </cfif>>#name#
 				      </cfoutput>							
@@ -417,35 +246,6 @@
 				where b.entity_role = 'HRMGR' and a.entity_key = b.entity_key and b.group_prefix = 'WO' order by sort_fld
                 </cfquery>			
 
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="hr_mgr" tabindex=39>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_hr_mgr">
-		        <option value="#name#" >#name#
-		      </cfoutput>
-	      </select>	
-      <cfelse>      
-				<select name="hr_mgr" size="1" tabindex=39>
-						<cfoutput>
-						<option value="#hr_mgr#" selected="selected">#hr_mgr#</option>
-						</cfoutput>
-			     	<cfoutput query="qry_hr_mgr">
-			        <option value="#name#" >#name#
-			      </cfoutput>							
-				</select>
-
-    	</cfif> --->
-        
-<!---        <cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="hr_mgr" tabindex=39>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_hr_mgr">
-		        <option value="#name#" >#name#
-		      </cfoutput>
-	      </select>	
-      <cfelse>    --->  
 				<select name="hr_mgr" size="1" tabindex=39>
 <!---						<cfoutput>
 						<option value="#hr_mgr#" selected="selected">#hr_mgr#</option>
@@ -473,21 +273,8 @@
 				select b.entity_key, initcap(first_name) ||' '|| initcap(last_name) as name from ENTITY a, cmft_entity_wo b
 				where b.entity_role = 'DMGR' and a.entity_key = b.entity_key and b.group_prefix='WO' order by sort_fld 			</cfquery>
         
-        
-      
-<!--- 			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-			<select name="dist_mgr" tabindex=40>
-				<option value="">Select One...</option>
-	     	<cfoutput query="qry_dist_mgr">
-	        <option value="#name#" >--#name#
-	      </cfoutput>
-      </select>	
-      <cfelse> --->     
 				<select name="dist_mgr" size="1" tabindex=40>
-						<!---<cfoutput>
-						<option value="#dist_mgr#" selected="selected">#dist_mgr#</option>
-						</cfoutput>--->
+					
 			     	<option value="">Select One...</option>
 					<cfoutput query="qry_dist_mgr">
 			        <option value='#name#' <cfif isdefined('dist_mgr') AND qry_dist_mgr.name eq dist_mgr> selected='selected'</cfif>>#name#</option>
@@ -524,9 +311,7 @@
 			</select>	
       <cfelse>      
 				<select name="hr_mgr_dist" size="1" tabindex=39>
-			<!---			<cfoutput>
-						<option value="#hr_mgr_dist#" selected="selected">#hr_mgr_dist#</option>
-						</cfoutput>--->
+
                      <option value="">Select One...</option>   
                         
 			     	<cfoutput query="qry_hr_mgr_dist">
@@ -546,24 +331,6 @@
  			select forum_number from forum where matter_key=#matterkey#  <!---and venue_type_key like '8%'--->
             </cfquery>
 
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="eeoc_no" tabindex=16>
-					<option value="Not Yet Assigned">Not Yet Assigned</option>
-		     	<cfoutput query="qry_eeoc_no">
-		        <option value="#forum_number#" >#forum_number#
-		      </cfoutput>
-	      </select>	
-      <cfelse>      
-				<select name="eeoc_no" size="1" tabindex=16>
-						<cfoutput>
-						<option value="#eeoc_no#" selected="selected">#eeoc_no#</option>
-						</cfoutput>
-			     	<cfoutput query="qry_eeoc_no">
-			        <option value="#forum_number#" >#forum_number#
-			      </cfoutput>							
-				</select>
-    	</cfif>	--->
         
         
      <cfif not qry_last_submitted_data.RecordCount gt 0>      
@@ -593,36 +360,6 @@
 				select b.entity_key, initcap(first_name) ||' '|| initcap(last_name) as name from ENTITY a, cmft_entity_wo b
 				where b.entity_role = 'OHNA' and a.entity_key = b.entity_key and b.group_prefix='WO' order by sort_fld 			</cfquery>
 
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-			<select name="ohna_dist" tabindex=42>
-				<option value="">Select One...</option>
-	     	<cfoutput query="qry_ohna_dist">
-	        <option value="#name#" >#name#
-	      </cfoutput>
-      </select>	
-      <cfelse>      
-				<select name="ohna_dist" size="1" tabindex=39>
-						<cfoutput>
-						<option value="#ohna_dist#" selected="selected">#ohna_dist#</option>
-						</cfoutput>
-			     	<cfoutput query="qry_ohna_dist">
-			        <option value="#name#" >#name#
-			      </cfoutput>							
-				</select>
-
-    	</cfif>	--->
-        
-        
-     <!---  <cfif not qry_last_submitted_data.RecordCount gt 0>    
-      
-			<select name="ohna_dist" tabindex=42>
-				<option value="">Select One...</option>
-	     	<cfoutput query="qry_ohna_dist">
-	        <option value="#name#" >#name#
-	      </cfoutput>
-      </select>	
-      <cfelse>   --->  
 				<select name="ohna_dist" size="1" tabindex=39>
 				<!---		<cfoutput>
 						<option value="#ohna_dist#" selected="selected">#ohna_dist#</option>
@@ -649,29 +386,6 @@
 		<td  align="right" class=TextMaingr>Mr. / Ms. </td>
 		<td tabindex=17>
 		
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_rep_prefix" size="1" tabindex=17>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="Mr.">Mr.</option>
-						<option value="Ms." >Ms.</option>
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="comp_rep_prefix" size="1" tabindex=1>
-							<option value="#comp_rep_prefix#" selected="selected">#comp_rep_prefix#</option>
-						<option value="Mr.">Mr.</option>
-						<option value="Ms." >Ms.</option>				
-					</select>
-				</cfoutput>		
-			</cfif>--->
-            
-            			<!---<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="comp_rep_prefix" size="1" tabindex=17>
-						<!---<option value="">Select One...</option>		--->	
-						<option value="Mr.">Mr.</option>
-						<option value="Ms." >Ms.</option>
-				</select>
-			<cfelse>--->
 				<cfoutput>
 					<select name="comp_rep_prefix" size="1" tabindex=1>
 				<!---			<option value="#comp_rep_prefix#" selected="selected">#comp_rep_prefix#</option>--->
@@ -690,16 +404,6 @@
 		<td  width=10% align="right" class=TextMaingr>WO Office </td>
 		<td width=30%>
 			
-
-            
-<!---            <cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="alo_office" size="1" tabindex=43>
-					<option value="Long Beach">Long Beach</option>
-					<option value="San Francisco" >San Francisco</option>
-					<option value="San Diego">San Diego</option>
-					<option value="Seattle Field Office">Seattle Field Office</option>
-				</select>
-			<cfelse>--->
 				<cfoutput>
 					<select name="alo_office" size="1" tabindex=43>
 					<!---<option value="#alo_office#" selected="selected">#alo_office#</option>--->
@@ -727,43 +431,6 @@
 		<td align="right" class=TextMaingr>WO Address1 </td>
 		<td>
 
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="alo_addr1" size=1 tabindex=43 >
-					<!---<option value="">Select One...</option>	--->
-					<option value="1745 Stout Street, Suite 500">1745 Stout Street, Suite 500</option>				
-					<option value="300 Long Beach Blvd., Rm 240">300 Long Beach Blvd., Rm 240</option>
-					<option value="9350 South 150 East, Suite 800" selected="selected">9350 South 150 East, Suite 800</option>
-					<option value="11255 Rancho Carmel Dr., Rm 1440">11255 Rancho Carmel Dr., Rm 1440</option>
-					<option value ="1300 Evans Ave PO Box 883790, Room 217">1300 Evans Ave PO Box 883790, Room 217</option>
-					<option value ="PO Box 3686">PO Box 3686</option>
-
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="alo_addr1" size="1" tabindex=43 >
-					<option value="#alo_addr1#" selected="selected">#alo_addr1#</option>
-					<!---<option value="">Select One...</option>--->			
-					<option value="300 Long Beach Blvd., Rm 240">300 Long Beach Blvd., Rm 240</option>
-					<option value="1300 Evans Ave., Rm 217 P.O. Box 883790" >1300 Evans Ave., Rm 217 P.O. Box 883790</option>
-					<!---<option value="P.O. Box 883790">P.O. Box 883790</option>--->				
-					<option value="11255 Rancho Carmel Dr., Rm 1440">11255 Rancho Carmel Dr., Rm 1440</option>		
-					<option value="909 First Avenue ##400">909 First Avenue ##400</option>
-					</select>
-				</cfoutput>				
-			
-			</cfif>--->
-            
-            
-<!---            <cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="alo_addr1" size=1 tabindex=43 >
-					<!---<option value="">Select One...</option>	--->		
-					<option value="300 Long Beach Blvd., Rm 240">300 Long Beach Blvd., Rm 240</option>
-					<option value="1300 Evans Ave., Rm 217 P.O. Box 883790" selected="selected">1300 Evans Ave., Rm 217 P.O. Box 883790</option>
-					<!---<option value="P.O. Box 883790">P.O. Box 883790</option>--->		
-					<option value="11255 Rancho Carmel Dr., Rm 1440">11255 Rancho Carmel Dr., Rm 1440</option>
-					<option value ="909 First Avenue #400">909 First Avenue #400</option>
-				</select>
-			<cfelse>--->
 				<cfoutput>
 					<select name="alo_addr1" size="1" tabindex=43 >
 					<option value="1745 Stout Street, Suite 500"<cfif isdefined('alo_addr1') AND trim(alo_addr1) eq '1745 Stout Street, Suite 500'> selected='selected'</cfif>>1745 Stout Street, Suite 500</option>					
@@ -794,40 +461,7 @@
 		
 		<td align="right" class=TextMaingr>WO  Address2 </td>
 		<td>
-			
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="alo_addr2" size="1" tabindex=45>
-					<option value="">Select One...</option>		
-					<option value="Denver, CO 80299-5555">Denver, CO 80299-5555</option>
-					<option value="Long Beach, CA 90802-2496" selected="selected">Long Beach, CA 90802-2496</option>
-					<option value="Sandy, Ut 84070-2716">Sandy, Ut 84070-2716</option>
-					<option value="San Diego, CA 92197-4400">San Diego, CA 92197-4400</option>
-					<option value="San Francisco, CA 94188-3790">San Francisco, CA 94188-3790</option>
-					<option value="Seattle, WA 98124-3686">Seattle, WA 98124-3686</option>
-				</select>
-			<cfelse>
-				<cfoutput>
-					<select name="alo_addr2" size="1" tabindex=45>
-					<option value="Denver, CO 80299-5555">Denver, CO 80299-5555</option>
-					<option value="Long Beach, CA 90802-2496" selected="selected">Long Beach, CA 90802-2496</option>
-					<option value="Sandy, Ut 84070-2716">Sandy, Ut 84070-2716</option>
-					<option value="San Diego, CA 92197-4400">San Diego, CA 92197-4400</option>
-					<option value="San Francisco, CA 94188-3790">San Francisco, CA 94188-3790</option>
-					<option value="Seattle, WA 98124-3686">Seattle, WA 98124-3686</option>
-					</select>
-				</cfoutput>				
-			
-			</cfif>--->
-            
-<!---            <cfif not qry_last_submitted_data.RecordCount gt 0>
-				<select name="alo_addr2" size="1" tabindex=45>
-					<option value="">Select One...</option>		
-					<option value="Long Beach, CA 90802-2496">Long Beach, CA 90802-2496</option>
-					<option value="San Francisco, CA 94188-3790" selected="selected">San Francisco, CA 94188-3790</option>
-					<option value="San Diego, CA 92197-4400">San Diego, CA 92197-4400</option>
-					<option value="Seattle, WA 98104">Seattle, WA 98104</option>
-				</select>
-			<cfelse>--->
+		
 				<cfoutput>
 					<select name="alo_addr2" size="1" tabindex=45>
 					<!---<option value="#alo_addr2#" selected="selected">#alo_addr2#</option>--->			
@@ -863,49 +497,9 @@
 				from ENTITY a, cmft_entity_wo b
 				where b.entity_role = 'ATTNY' and a.entity_key = b.entity_key and b.group_prefix = 'WO' order by sort_fld
              </cfquery>
-
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="attorney_name" tabindex=46>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_attorney">
-		        <option value="#name#" >#name#</option>
-		      </cfoutput>
-	      </select>	
-      <cfelse>      
+    
 				<select name="attorney_name" size="1" tabindex=46>
-				<!---
 				
-				Commented out.  It was causing erronous name  8/1/2019
-						<cfoutput>
-						<option value="#attorney_name#" selected="selected">#attorney_name#</option>
-						</cfoutput>
-						
-				--->		
-			     	<cfoutput query="qry_attorney">
-			        <option value="#name#" >#name#</option>
-			      </cfoutput>							
-				</select>
-    	</cfif>	--->
-        
-<!---       <cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="attorney_name" tabindex=46>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_attorney">
-		        <option value="#name#" >#name#</option>
-		      </cfoutput>
-	      </select>	
-      <cfelse> --->     
-				<select name="attorney_name" size="1" tabindex=46>
-				<!---
-				
-				Commented out.  It was causing erronous name  8/1/2019
-						<cfoutput>
-						<option value="#attorney_name#" selected="selected">#attorney_name#</option>
-						</cfoutput>
-						
-				--->		
 			     	<cfoutput query="qry_attorney">
 			        <option value="#name#"<cfif isdefined('attorney_name') AND trim(attorney_name) eq qry_attorney.name> selected='selected'</cfif>>#qry_attorney.name#</option>
 			      </cfoutput>							
@@ -923,35 +517,6 @@
 		<td  width=10% align="right" class=TextMaingr>Attorney Title</td>
 		<td width=30%>
 
-<!---		<cfif not qry_last_submitted_data.RecordCount gt 0>
-			<select name="attorney_title" size="1" tabindex=47>
-					<option value="">Select One...</option>		
-					<option value="Attorney">Attorney</option>						
-					<option value="Senior Litigation Counsel">Senior Litigation Counsel</option>
-					<option value="Managing Counsel" >Managing Counsel</option>
-					<option value="Deputy Managing Counsel">Deputy Managing Counsel</option
-			></select>
-		<cfelse>
-			<cfoutput>
-						<select name="attorney_title" size="1" tabindex=47>
-						<option value="#attorney_title#" selected="selected">#attorney_title#</option>	
-						<option value="Attorney">Attorney</option>						
-						<option value="Senior Litigation Counsel">Senior Litigation Counsel</option>
-						<option value="Managing Counsel" >Managing Counsel</option>
-						<option value="Deputy Managing Counsel">Deputy Managing Counsel</option					
-				></select>
-			</cfoutput>		
-		</cfif>--->
-        
-<!---        <cfif not qry_last_submitted_data.RecordCount gt 0>
-			<select name="attorney_title" size="1" tabindex=47>
-					<option value="">Select One...</option>		
-					<option value="Attorney">Attorney</option>						
-					<option value="Senior Litigation Counsel">Senior Litigation Counsel</option>
-					<option value="Managing Counsel" >Managing Counsel</option>
-					<option value="Deputy Managing Counsel">Deputy Managing Counsel</option
-			></select>
-		<cfelse>--->
 			<cfoutput>
 						<select name="attorney_title" size="1" tabindex=47>
 						<!---<option value="#attorney_title#" selected="selected">#attorney_title#</option>	--->
@@ -984,36 +549,7 @@
 				select b.entity_key, initcap(first_name) ||' '|| initcap(last_name) as name from ENTITY a, cmft_entity_wo b
 				where b.entity_role = 'PLGL' and a.entity_key = b.entity_key and b.group_prefix = 'WO' order by sort_fld  			
 			</cfquery>
-
-<!---			<cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="paralgl_name" tabindex=48>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_paralgl">
-		        <option value="#name#" >#name#
-		      </cfoutput>
-	      </select>	
-      <cfelse>      
-				<select name="paralgl_name" size="1" tabindex=48>
-						<cfoutput>
-						<option value="#paralgl_name#" selected="selected">#paralgl_name#</option>
-						</cfoutput>
-			     	<cfoutput query="qry_paralgl">
-			        <option value="#name#" >#name#
-			      </cfoutput>							
-				</select>
-
-    	</cfif> --->
-        
-<!---       <cfif not qry_last_submitted_data.RecordCount gt 0>      
-      
-				<select name="paralgl_name" tabindex=48>
-					<option value="">Select One...</option>
-		     	<cfoutput query="qry_paralgl">
-		        <option value="#name#" >#name#
-		      </cfoutput>
-	      </select>	
-      <cfelse>  --->    
+   
 				<select name="paralgl_name" size="1" tabindex=48>
 <!---						<cfoutput>
 						<option value="#paralgl_name#" selected="selected">#paralgl_name#</option>
@@ -1036,31 +572,7 @@
 		
 		<td align="right" class=TextMaingr>WO Phone </td>
 		<td>
-        
-<!---        <cfif not qry_last_submitted_data.RecordCount gt 0>
-			<select name="alo_phone" size="1" tabindex=49>
-					<option value="">Select One...</option>			
-					<option value="(562) 628-1340">(562) 628-1340</option>
-					<option value="(415) 550-5300">(415) 550-5300</option>
-					<option value="(858) 674-2738">(858) 674-2738</option>
-			</select>
-		<cfelse>
-		<cfoutput>
-			<select name="alo_phone" size="1" tabindex=49>
-					<option value="#alo_phone#" selected="selected">#alo_phone#</option>	
-					<option value="(562) 628-1340">(562) 628-1340</option>
-					<option value="(415) 550-5300">(415) 550-5300</option>
-					<option value="(858) 674-2738">(858) 674-2738</option>					
-			</select>
-		</cfoutput>		
-		</cfif>	--->
 
-<!---		<cfif not qry_last_submitted_data.RecordCount gt 0>
-			<select name="alo_phone" size="1" tabindex=49>
-					<option value="">Select One...</option>			
-
-			</select>
-		<cfelse>--->
 		<cfoutput>
 			<select name="alo_phone" size="1" tabindex=49>
 					<!---<option value="#alo_phone#" selected="selected">#alo_phone#</option>--->	

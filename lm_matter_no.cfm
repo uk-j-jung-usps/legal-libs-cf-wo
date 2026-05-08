@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
-<body background="img/bck_yellowbox1.gif">
+<body background="/WO/img/bck_yellowbox1.gif">
 <head>
 
 <cfset aceid = #mid(AUTH_USER,5,6)#>
+<cfif  aceid eq "">
+	<cfset aceid = "dd32j0">
+</cfif>
 
 
 <cfset ucaseform.matter_no = ucase(form.matter_no)>
