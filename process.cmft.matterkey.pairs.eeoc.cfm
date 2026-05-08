@@ -138,7 +138,7 @@
  
 	<!---#qry_cmft_tempvars.tempvar_key# &nbsp; #qry_cmft_tempvars.tempvar_name#<br>--->
 	
-	<cfquery name="Insert_cmft_matterkey_pairs" datasource="#datasrc#" username="lawmanager" password="zaq1xsw2ZAQ!XSW">
+	<cfquery name="Insert_cmft_matterkey_pairs" datasource="lawmanager">
 		INSERT INTO lawmanager.CMFT_MATTERKEY_PAIRS
 			(matter_key,
 			 tempvar_key_name,

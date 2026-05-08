@@ -11,7 +11,7 @@
 <head>
 <title>Legal Libs Templates!</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="css/form.css" rel="stylesheet" type="text/css">
+<link href="/WO/css/form.css" rel="stylesheet" type="text/css">
 
 </head>
 <body bgcolor="#ffffff"
@@ -1162,7 +1162,7 @@
 
 
 	<tr>
-		<td colspan=5 align=middle><br><br><input type="image" src="img/save_continue1.gif" border=0  value="submit"  tabindex=52>	</td>
+		<td colspan=5 align=middle><br><br><input type="image" src="/WO/img/save_continue1.gif" border=0  value="submit"  tabindex=52>	</td>
 
 
 

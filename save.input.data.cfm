@@ -5,6 +5,9 @@
 
 	<cfset Today = #DateFormat("#Now()#","mm/dd/YYYY")#>
 	<cfset aceid = #mid(AUTH_USER,5,6)#>
+	<cfif  aceid eq "">
+		<cfset aceid = "dd32j0">
+	</cfif>
 
 
 
@@ -32,7 +35,7 @@
 	
 	<!---*** Check to see if there is an entry for the matter_key in cmft_base table ***--->
 	<cfquery name="qry_existing_template" datasource="lawmanager">
-	  select * from cmft_base where matter_key = #matterkey#
+	  select * from lawmanager.cmft_base where matter_key = #matterkey#
 	</cfquery>
 
 	<!---*** if templates are processed for the very first time for this matter, do the very first insert in CMFT_BASE table ***--->
@@ -42,7 +45,7 @@
 	<cfelse>
 			<!--- update cmft_base table. Set the "process" to 'Y' so java program can process --->
 			<cfquery name="update_cmft_base" datasource="lawmanager">
-	  		update cmft_base 
+	  		update lawmanager.cmft_base 
 	  		set process 		= 'Y',
 	  	    updated_by 	= #owner_key#,
 	  	    date_updated = TO_DATE('#TODAY#', 'mm/dd/YYYY')
@@ -51,18 +54,18 @@
 
 			<!--- **** For all templates, clear/reset the entries in cmft_selected_templates table by deleting records for a given matterkey *** --->	
 			<cfquery name="delete_cmft_sel_templates" datasource="lawmanager">
-		 	 delete from CMFT_SELECTED_TEMPLATES where  base_key= #qry_existing_template.base_key#
+		 	 delete from lawmanager.CMFT_SELECTED_TEMPLATES where  base_key= #qry_existing_template.base_key#
 			</cfquery>	
 
 			<!--- **** For all templates, clear/reset the entries in cmft_matterkey_pair table by deleting records for a given matterkey *** --->	
 			<cfquery name="delete_cmft_matterkey_pairs" datasource="lawmanager">
-		 	 delete from CMFT_MATTERKEY_PAIRS where matter_key = #matterkey#
+		 	 delete from lawmanager.CMFT_MATTERKEY_PAIRS where matter_key = #matterkey#
 			</cfquery>
 
 			<!--- **** For Advice FSSC template, clear/reset the answers in cmft_dynamic_ans table by deleting records for a given matterkey *** --->
 			<cfif #mattertypekey# eq 1>
 				<cfquery name="delete_cmft_dynamic_ans" datasource="lawmanager">
-				  delete from CMFT_DYNAMIC_ANS where matter_key = #matterkey#
+				  delete from lawmanager.CMFT_DYNAMIC_ANS where matter_key = #matterkey#
 				</cfquery>		
 			</cfif>
 

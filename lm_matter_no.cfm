@@ -14,7 +14,7 @@
 
 
 <cfif IsDefined("ucaseform.matter_no")>
-		<cfquery name="qry_matter_no" datasource="#datasrc#" username="lawmanager" password="zaq1xsw2ZAQ!XSW">
+		<cfquery name="qry_matter_no" datasource="#datasrc#" username="lawmanager">
 	    select substr(matter_number, 1, 2) as matter_prefix, matter_key, matter_type_key from matter where matter_number='#ucaseform.matter_no#'
 		</cfquery>
 		
