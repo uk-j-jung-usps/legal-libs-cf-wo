@@ -1,5 +1,8 @@
 
 <cfset aceid = #mid(AUTH_USER,5,6)#>
+<cfif  aceid eq "">
+	<cfset aceid = "dd32j0">
+</cfif>
 
 <!---<cfoutput>#aceid#</cfoutput><br>--->
 
@@ -114,7 +117,7 @@
 				topmargin="5"
 				marginheight="5"
 				marginwidth="0"
-				background="img/bck_yellowbox2.gif">
+				background="/WO/img/bck_yellowbox2.gif">
 		
 		
 	<cfform action="lm_matter_no.cfm" method="post" enctype="application/x-www-form-urlencoded" name="mainform" enablecab="yes" >	
@@ -122,20 +125,20 @@
 	<div class="styleSelect">	
 	
 	<table align="center" width="450" border="0" cellspacing="20" cellpadding="20" bgcolor="#ffffff" >
-	<tr><td colspan=3 align=center><img src="img/LL_header.gif"  border="0" >
+	<tr><td colspan=3 align=center><img src="/WO/img/LL_header.gif"  border="0" >
 	</table>
 		
 	<table align="center" width="330" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" >
 	
-	<!---<tr><td colspan=3 align=center><img src="img/LL_header.gif"  border="0" >--->
 	
-	<tr><td colspan=3 align=center>&nbsp;<br><br><br><br><!---<img src="img/header1.gif" width=300 width=80 border="0" >--->
+	
+	<tr><td colspan=3 align=center>&nbsp;<br><br><br><br><!---<img src="/WO/img/header1.gif" width=300 width=80 border="0" >--->
 	<tr><br>
 		<td width=160 align="right" class=TextMaingr>Enter Matter Number: </td>
 		<td  align=middle ><cfinput type="text" size="13" name="matter_no"  value="" maxlength="11" required="yes" message="Please enter a valid LM case number!"  > </td>
 			
 	
-		<td><input type="image" src="img/go2.gif" border=0  value="submit" >
+		<td><input type="image" src="/WO/img/go2.gif" border=0  value="submit" >
 			
 			<!---</a> &nbsp;&nbsp; <A href="javascript:document.mainform.reset()" > <IMG alt="" src="img/reset.gif" border=0></A>---></td>
 	

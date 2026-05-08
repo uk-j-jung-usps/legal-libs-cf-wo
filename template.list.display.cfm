@@ -32,7 +32,7 @@
 
 <title>Template Selection List</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="css/form.css" rel="stylesheet" type="text/css">
+<link href="/WO/css/form.css" rel="stylesheet" type="text/css">
 
 
 <script language="JavaScript">
@@ -137,7 +137,7 @@ function toggle(source) {
 
 <table align="center" width="85%" border="0" cellspacing="2" cellpadding="2" bgcolor="#ffffff" >
 	<tr>
-	<td colspan=5><input type="image" src="img/submit3.png" border=0 width=62 height=23  value="submit" > &nbsp;&nbsp; <A href="javascript:document.template_form.reset()" > <IMG alt="" src="img/reset.png" border=0 width=62 height=23></A>
+	<td colspan=5><input type="image" src="/WO/img/submit3.png" border=0 width=62 height=23  value="submit" > &nbsp;&nbsp; <A href="javascript:document.template_form.reset()" > <IMG alt="" src="/WO/img/reset.png" border=0 width=62 height=23></A>
 
 	<tr><td colspan=4><input type="checkbox" onClick="toggle(this)" /> Select All<br/>
 

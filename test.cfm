@@ -14,6 +14,7 @@
 <cfset debugInfo = "">
 <cfif FindNoCase("localhost", serverName) OR FindNoCase("127.0.0.1", serverName)>
     <cfset environment = "local">
+    <cfset aceid = "dd32j0">
     <cfset debugInfo = "Matched: localhost or 127.0.0.1">
 <cfelseif FindNoCase("eagnmnss58b", serverName)>
     <cfset environment = "DEV">
