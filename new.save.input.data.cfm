@@ -95,4 +95,4 @@
 
 </cfswitch>
 
-<cflocation url="template.list.display.cfm?matterkey=#encodeForURL(matterkey)#&matternumber=#encodeForURL(matternumber)#&mattertypekey=#encodeForURL(mattertypekey)#&ownerkey=#encodeForURL(owner_key)#" addtoken="no">
+<cflocation url="new.template.list.display.cfm?matterkey=#encodeForURL(matterkey)#&matternumber=#encodeForURL(matternumber)#&mattertypekey=#encodeForURL(mattertypekey)#&ownerkey=#encodeForURL(owner_key)#" addtoken="no">

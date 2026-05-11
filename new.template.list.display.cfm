@@ -64,7 +64,7 @@
 <body>
 
 <cfoutput>
-<cfform action="process.templates.cfm" method="post" name="template_form">
+<cfform action="new.process.templates.cfm" method="post" name="template_form">
 
 	<input type="hidden" name="matterkey" value="#encodeForHTMLAttribute(url.matterkey)#">
 	<input type="hidden" name="matternumber" value="#encodeForHTMLAttribute(url.matternumber)#">
@@ -77,10 +77,10 @@
 	<table align="center" width="85%" border="0" cellspacing="3" cellpadding="3" bgcolor="##ffffff">
 		<tr>
 			<td class="TextMaingr" bgcolor="##ffffff">
-				<a href="case.files.home.cfm">Home</a>&nbsp;&nbsp;&nbsp;
+				<a href="new.case.files.home.cfm">Home</a>&nbsp;&nbsp;&nbsp;
 				<a href="https://lawdept2.usps.gov/lmWeb/tabular.jsp?NB=MatterAllWS&QRY=|matter_key%3D#encodeForURL(matterkey)#" target="_blank">LawManager</a>&nbsp;&nbsp;&nbsp;
 				<cfif len(currentConfig.displayPage)>
-					<a href="#currentConfig.displayPage#?matterkey=#encodeForURL(matterkey)#&matternumber=#encodeForURL(matternumber)#&mattertypekey=#encodeForURL(mattertypekey)#">Back to #currentConfig.label# Data Input Screen</a>&nbsp;&nbsp;&nbsp;
+					<a href="new.#currentConfig.displayPage#?matterkey=#encodeForURL(matterkey)#&matternumber=#encodeForURL(matternumber)#&mattertypekey=#encodeForURL(mattertypekey)#">Back to #currentConfig.label# Data Input Screen</a>&nbsp;&nbsp;&nbsp;
 				</cfif>
 			</td>
 			<td align="right">Template Selection List - #currentConfig.label#</td>

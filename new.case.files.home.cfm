@@ -112,7 +112,7 @@
 	</head>
 	<body>
 
-		<cfform action="lm_matter_no.cfm" method="post" name="mainform">
+		<cfform action="new.lm_matter_no.cfm" method="post" name="mainform">
 
 			<div class="styleSelect">
 				<div class="container">
