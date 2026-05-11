@@ -13,12 +13,12 @@
 				<cfset comp_state = "">
 				<cfset comp_zip = "">			
 			</cfif>
-		<cfelse>
+	<cfelse>
 			<cfset comp_addr= "">
 			<cfset comp_city = "">
 			<cfset comp_state = "">
 			<cfset comp_zip = "">
-		</cfif>
+	</cfif>
 
 
 <!--- 6/1/2022 -Commented out.  Throws and error --->

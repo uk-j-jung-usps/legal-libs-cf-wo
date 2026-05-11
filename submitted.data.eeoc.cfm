@@ -5,7 +5,7 @@
 <!---<cfif IsDefined("url.matterkey")>--->
 	<cfquery name="qry_last_submitted_data" datasource="lawmanager">
 	  select tempvar_key, tempvar_key_name, tempvar_value
-	  from cmft_matterkey_pairs
+	  from lawmanager.cmft_matterkey_pairs
 	  where matter_key=#url.matterkey# order by tempvar_key
 	</cfquery>
 <!---<cfelse>--->

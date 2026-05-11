@@ -38,6 +38,35 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 	  AND c.matter_entity_type_key = 39
 </cfquery>
 
+<!--- Query Complainant's address (only if complainant found) --->
+<cfif qry_complainant.recordCount GT 0>
+	<cfquery name="qry_comp_addr" datasource="lawmanager">
+		SELECT a.entity_key,
+			   trim(b.street) AS street,
+			   trim(b.city) AS city,
+			   b.state,
+			   trim(b.zip_code) AS zip_code
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.address b ON a.entity_key = b.entity_key
+		WHERE a.entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
+	</cfquery>
+
+	<!--- Query Complainant's phone --->
+	<cfquery name="qry_comp_phone" datasource="lawmanager">
+		SELECT a.entity_key, trim(b.phone_number) AS comp_phone
+		FROM entity a
+		INNER JOIN phone b ON a.entity_key = b.entity_key
+		WHERE a.entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
+	</cfquery>
+
+	<!--- Query Complainant's SSN --->
+	<cfquery name="qry_ssn" datasource="lawmanager">
+		SELECT ssn AS comp_ssn
+		FROM hr.emp_xref
+		WHERE entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
+	</cfquery>
+</cfif>
+
 <cfscript>
 if (qry_complainant.recordCount > 0) {
 
@@ -53,30 +82,17 @@ if (qry_complainant.recordCount > 0) {
 	comp_lname    = qry_complainant.last_name;
 	comp_facility = qry_complainant.comp_facility;
 	comp_district = qry_complainant.comp_district;
-</cfscript>
 
-	<!--- Query Complainant's address --->
-	<cfquery name="qry_comp_addr" datasource="lawmanager">
-		SELECT a.entity_key,
-			   trim(b.street) AS street,
-			   trim(b.city) AS city,
-			   b.state,
-			   trim(b.zip_code) AS zip_code
-		FROM lawmanager.entity a
-		INNER JOIN lawmanager.address b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
-	</cfquery>
-
-	<cfscript>
+	// --- Address ---
 	if (qry_comp_addr.recordCount > 0) {
-		// --- Street ---
+		// Street
 		if (len(qry_comp_addr.street)) {
 			comp_addr = qry_comp_addr.street;
 		} else if (!hasPriorSubmission) {
 			comp_addr = "";
 		}
 
-		// --- City ---
+		// City
 		if (len(qry_comp_addr.city)) {
 			comp_city = qry_comp_addr.city;
 		} else if (hasPriorSubmission && structKeyExists(variables, "comp_citystzip")) {
@@ -88,12 +104,12 @@ if (qry_complainant.recordCount > 0) {
 			comp_city = "";
 		}
 
-		// --- State (only set if not already parsed above) ---
+		// State (only set if not already parsed above)
 		if (!structKeyExists(variables, "comp_state") || len(qry_comp_addr.state)) {
 			comp_state = len(qry_comp_addr.state) ? qry_comp_addr.state : "";
 		}
 
-		// --- Zip ---
+		// Zip
 		if (!structKeyExists(variables, "comp_zip") || len(qry_comp_addr.zip_code)) {
 			comp_zip = len(qry_comp_addr.zip_code) ? qry_comp_addr.zip_code : "";
 		}
@@ -112,21 +128,17 @@ if (qry_complainant.recordCount > 0) {
 			comp_zip   = "";
 		}
 	}
-	</cfscript>
 
-	<!--- Query Complainant's phone --->
-	<cfquery name="qry_comp_phone" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS comp_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
-	</cfquery>
-
-	<cfscript>
+	// --- Phone ---
 	comp_phone = (qry_comp_phone.recordCount > 0) ? qry_comp_phone.comp_phone : "";
-	</cfscript>
 
-<cfscript>
+	// --- SSN ---
+	if (qry_ssn.recordCount > 0 && len(qry_ssn.comp_ssn)) {
+		comp_ssn = qry_ssn.comp_ssn;
+	} else if (!hasPriorSubmission) {
+		comp_ssn = "";
+	}
+
 } else {
 	// --- Complainant not found in LawManager ---
 	if (hasPriorSubmission && structKeyExists(variables, "comp_citystzip")) {
@@ -147,27 +159,9 @@ if (qry_complainant.recordCount > 0) {
 		comp_zip      = "";
 		comp_phone    = "";
 	}
+	comp_ssn = "";
 }
 </cfscript>
-
-<!--- Query Complainant's SSN --->
-<cfif qry_complainant.recordCount GT 0>
-	<cfquery name="qry_ssn" datasource="lawmanager">
-		SELECT ssn AS comp_ssn
-		FROM hr.emp_xref
-		WHERE entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
-	</cfquery>
-
-	<cfscript>
-	if (qry_ssn.recordCount > 0 && len(qry_ssn.comp_ssn)) {
-		comp_ssn = qry_ssn.comp_ssn;
-	} else if (!hasPriorSubmission) {
-		comp_ssn = "";
-	}
-	</cfscript>
-<cfelse>
-	<cfset comp_ssn = "">
-</cfif>
 
 <!--- Query case's agency number --->
 <cfquery name="qry_agency_no" datasource="lawmanager">

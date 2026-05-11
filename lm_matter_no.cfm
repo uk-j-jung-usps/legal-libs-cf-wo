@@ -77,7 +77,7 @@
 				  </cfcase>	
 				
 		    <cfcase value="1">
-		    	<cfquery name="qry_advice_subpoena" datasource="#datasrc#" username="lawmanager" password="zaq1xsw2ZAQ!XSW">
+		    	<cfquery name="qry_advice_subpoena" datasource="#datasrc#" username="lawmanager">
 		    	select a.matter_key, a.matter_type_key, a.matter_name 
 							from matter a, mattercategoryusps b
  						where matter_number='#ucaseform.matter_no#' and a.matter_key=b.matter_key 
