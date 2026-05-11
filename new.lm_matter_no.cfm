@@ -6,18 +6,11 @@
 	}
 
 	matterNumber = uCase(form.matter_no);
-</cfscript>
 
-<!--- Look up the matter by matter number --->
-<cfquery name="qry_matter_no" datasource="lawmanager">
-	SELECT substr(matter_number, 1, 2) AS matter_prefix,
-	       matter_key,
-	       matter_type_key
-	FROM matter
-	WHERE matter_number = <cfqueryparam value="#matterNumber#" cfsqltype="cf_sql_varchar">
-</cfquery>
+    //create and get component from wo_eeoc_component
+    woComponent = new components.wo_eeoc_component();
+    qry_matter_no = woComponent.qryMatterNo(matterNumber);
 
-<cfscript>
 	// If no matching matter found, redirect with error
 	if (qry_matter_no.recordCount EQ 0) {
 		location("case.files.home.cfm?matternoerror=Y", false);
@@ -27,16 +20,9 @@
 	mTypeKey   = qry_matter_no.matter_type_key;
 	mPrefix    = qry_matter_no.matter_prefix;
 
-	// Helper: build standard query string params
-	function buildQS(includePrefix = true) {
-		var qs = "matterkey=" & encodeForURL(mKey)
-		       & "&matternumber=" & encodeForURL(matterNumber)
-		       & "&mattertypekey=" & encodeForURL(mTypeKey);
-		if (arguments.includePrefix) {
-			qs &= "&matter_prefix=" & encodeForURL(mPrefix);
-		}
-		return qs;
-	}
+	// Pre-build query strings for use in routing
+	qsWithPrefix    = woComponent.buildQS(mKey, matterNumber, mTypeKey, mPrefix, true);
+	qsWithoutPrefix = woComponent.buildQS(mKey, matterNumber, mTypeKey, mPrefix, false);
 
 	// Route based on matter_type_key and matter_prefix
 	switch (mTypeKey) {
@@ -44,13 +30,13 @@
 		case 9: // EEOC
 			switch (mPrefix) {
 				case "WI":
-					location("wi/master.file.detail.display.eeoc_WI.cfm?" & buildQS(), false);
+					location("wi/master.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
 					break;
 				case "SL":
-					location("sl/master.file.detail.display.eeoc_SL.cfm?" & buildQS(), false);
+					location("sl/master.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
 					break;
 				default: // SF, WO, etc.
-					location("master.file.detail.display.eeoc.cfm?" & buildQS(), false);
+					location("new.master.file.detail.display.eeoc.cfm?" & qsWithPrefix, false);
 					break;
 			}
 			break;
@@ -61,10 +47,10 @@
 					location("wi/legallibs_message_mspb.cfm", false);
 					break;
 				case "SL":
-					location("sl/master.file.detail.display.mspb_SL.cfm?" & buildQS(), false);
+					location("sl/master.file.detail.display.mspb_SL.cfm?" & qsWithPrefix, false);
 					break;
 				default: // SF, WO
-					location("master.file.detail.display.mspb.cfm?" & buildQS(false), false);
+					location("new.master.file.detail.display.mspb.cfm?" & qsWithoutPrefix, false);
 					break;
 			}
 			break;
@@ -75,10 +61,10 @@
 					location("wi/legallibs_message_district_court.cfm", false);
 					break;
 				case "SL":
-					location("sl/master.file.detail.display.dct_SL.cfm?" & buildQS(false), false);
+					location("sl/master.file.detail.display.dct_SL.cfm?" & qsWithoutPrefix, false);
 					break;
 				default: // SF, WO
-					location("master.file.detail.display.dct.cfm?" & buildQS(false), false);
+					location("new.master.file.detail.display.dct.cfm?" & qsWithoutPrefix, false);
 					break;
 			}
 			break;
@@ -88,28 +74,28 @@
 			break;
 
 		default:
-			location("master.file.detail.display.other.cfm", false);
+			location("new.master.file.detail.display.other.cfm", false);
 			break;
 	}
-</cfscript>
 
-<!--- Advice (matter_type_key = 1): check for subpoena category --->
-<cfif mTypeKey EQ 1>
-	<cfquery name="qry_advice_subpoena" datasource="lawmanager">
-		SELECT a.matter_key, a.matter_type_key, a.matter_name
-		FROM matter a
-		INNER JOIN mattercategoryusps b ON a.matter_key = b.matter_key
-		WHERE a.matter_number = <cfqueryparam value="#matterNumber#" cfsqltype="cf_sql_varchar">
-		  AND b.category_type_key = <cfqueryparam value="8" cfsqltype="cf_sql_integer">
-		  AND b.subcategory_type_key = <cfqueryparam value="199" cfsqltype="cf_sql_integer">
-	</cfquery>
 
-	<cfscript>
+// Advice (matter_type_key = 1): check for subpoena category
+
+if (mTypeKey EQ 1) {
+	
+        woComponentAdviceSubpoena = new components.wo_eeoc_component();
+        qry_advice_subpoena = woComponentAdviceSubpoena.qryAdviceSubpoena(matterNumber);
+
+        matterKey = encodeForURL(qry_advice_subpoena.matter_key);
+        matterTypeKey = encodeForURL(qry_advice_subpoena.matter_type_key);
+        matterName = encodeForURL(qry_advice_subpoena.matter_name);
+        baseParams = "matterkey=#matterKey#&matternumber=#matterNumber#&mattertypekey=#matterTypeKey#&mattername=#matterName#";
+    
 		if (qry_advice_subpoena.recordCount) {
-			location("master.file.detail.display.advice_fssc.cfm?" & buildQS()
-				& "&mattername=" & encodeForURL(qry_advice_subpoena.matter_name), false);
+			location("master.file.detail.display.advice_fssc.cfm?" & baseParams, false);
 		} else {
-			location("master.file.detail.display.other.cfm", false);
+			location("new.master.file.detail.display.other.cfm", false);
 		}
-	</cfscript>
-</cfif>
+	
+}
+</cfscript>

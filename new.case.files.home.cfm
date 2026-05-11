@@ -7,24 +7,19 @@
 </cfscript>
 
 <!--- When Legal Libs is launched from LawManager application by selecting a specific case --->
-<cfif structKeyExists(url, "matterkey")>
-
-	<cfquery name="qry_matter_no" datasource="lawmanager">
-		SELECT substr(matter_number, 1, 2) AS matter_prefix,
-			   matter_number,
-			   matter_name,
-			   matter_type_key
-		FROM matter
-		WHERE matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_varchar">
-	</cfquery>
+<cfif structKeyExists(url, "matterKey")>
 
 	<cfscript>
+		woComponent = new components.wo_eeoc_component();
+		qry_matter_no = woComponent.getMatterByKey(url.matterKey);
+	
 		// Build common URL parameters
-		matterkey     = encodeForURL(url.matterkey);
-		matternumber  = encodeForURL(qry_matter_no.matter_number);
-		mattertypekey = encodeForURL(qry_matter_no.matter_type_key);
-		matterprefix  = encodeForURL(qry_matter_no.matter_prefix);
-		baseParams    = "matterkey=#matterkey#&matternumber=#matternumber#&mattertypekey=#mattertypekey#&matter_prefix=#matterprefix#";
+		matterKey     = encodeForURL(url.matterKey);
+		matterNumber  = encodeForURL(qry_matter_no.matter_number);
+		matterTypeKey = encodeForURL(qry_matter_no.matter_type_key);
+		matterPrefix  = encodeForURL(qry_matter_no.matter_prefix);
+        matterName    = encodeForURL(qry_matter_no.matter_name);
+		baseParams    = "matterkey=#matterKey#&matternumber=#matterNumber#&mattertypekey=#matterTypeKey#&matter_prefix=#matterPrefix#&mattername=#matterName#";
 
 		matterType = qry_matter_no.matter_type_key;
 		prefix     = qry_matter_no.matter_prefix;
@@ -55,17 +50,17 @@
 
 		<!--- Advice cases (matter_type_key = 1) - Subpoenas and Affidavits --->
 		<cfcase value="1">
-			<cfquery name="qry_advice_subpoena" datasource="lawmanager">
-				SELECT a.matter_key, a.matter_type_key, a.matter_name
-				FROM matter a
-				INNER JOIN mattercategoryusps b ON a.matter_key = b.matter_key
-				WHERE matter_number = <cfqueryparam value="#qry_matter_no.matter_number#" cfsqltype="cf_sql_varchar">
-				  AND b.category_type_key = 8
-				  AND b.subcategory_type_key = 199
-			</cfquery>
+			<cfscript>
+                woComponentAdviceSubpoena = new components.wo_advice_subpoena_component();
+                qry_advice_subpoena = woComponentAdviceSubpoena.getAdviceSubpoenaByMatterKey(url.matterKey);
+
+                matterKey = encodeForURL(qry_advice_subpoena.matter_key);
+                matterTypeKey = encodeForURL(qry_advice_subpoena.matter_type_key);
+                matterName = encodeForURL(qry_advice_subpoena.matter_name);
+            </cfscript>
 
 			<cfif qry_advice_subpoena.recordCount GT 0>
-				<cflocation url="master.file.detail.display.advice_fssc.cfm?#baseParams#&mattername=#encodeForURL(qry_advice_subpoena.matter_name)#" addtoken="false">
+				<cflocation url="master.file.detail.display.advice_fssc.cfm?#baseParams#" addtoken="false">
 			<cfelse>
 				<cflocation url="master.file.detail.display.other.cfm" addtoken="false">
 			</cfif>

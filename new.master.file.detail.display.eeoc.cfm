@@ -6,10 +6,10 @@ function renderOption(value, currentValue = "") {
 }
 </cfscript>
 
-<cfinclude template="submitted.data.eeoc.cfm">
-<cfinclude template="complainant.data.cfm">
-<cfinclude template="complainant.rep.data.cfm">
-<cfinclude template="admin.judge.data.cfm">
+<cfinclude template="new.submitted.data.eeoc.cfm">
+<cfinclude template="new.complainant.data.cfm">
+<cfinclude template="new.complainant.rep.data.cfm">
+<cfinclude template="new.admin.judge.data.cfm">
 
 <!DOCTYPE html>
 <html lang="en">

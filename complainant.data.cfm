@@ -10,7 +10,7 @@
 	  select b.entity_key, trim(initcap(b.first_name)) as first_name, trim(initcap(b.last_name)) as last_name, b.usps_eid as comp_eid, 
 	  trim(d.finance_name) as comp_facility, 
 	  trim(e.lvl2_desc) ||', ' || trim(e.lvl3_desc) as comp_district
-	  from matter a, entity b, matterentity c, fncm d, matterclientorgsusps e
+	  from lawmanager.matter a, lawmanager.entity b, lawmanager.matterentity c, lawmanager.fncm d, lawmanager.matterclientorgsusps e
 	  where a.matter_key=#url.matterkey# and a.matter_key=c.matter_key and b.entity_key=c.entity_key and 
 	  c.matter_entity_type_key=39  and a.usps_fac_id=d.lm_facility_key   and a.usps_client_orgs_key=e.usps_client_orgs_key
 </cfquery>
@@ -36,7 +36,7 @@
 	<!--- Query Complainant's address --->
 	<cfquery name="qry_comp_addr" datasource="lawmanager">
 	  select a.entity_key, trim(b.street)as street, trim(b.city) as city, b.state, trim(b.zip_code) as zip_code
-	  from entity a, address b
+	  from lawmanager.entity a, lawmanager.address b
 	  where a.entity_key=#qry_complainant.entity_key# and a.entity_key=b.entity_key
 	</cfquery>
 	
