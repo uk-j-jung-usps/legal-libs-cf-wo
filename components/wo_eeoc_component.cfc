@@ -40,9 +40,8 @@ component displayname="WO EEOC Component" hint="Data access functions for WO EEO
         qry.setDatasource("lawmanager");
         qry.addParam(name="matterNumber", value=arguments.matterNumber, cfsqltype="cf_sql_varchar");
         var result = qry.execute(
-            sql="SELECT a.matter_key, a.matter_type_key, a.matter_name
+            sql="SELECT substr(matter_number, 1, 2) as matter_prefix, matter_key, matter_type_key
                  FROM matter a
-                 INNER JOIN mattercategoryusps b ON a.matter_key = b.matter_key
                  WHERE matter_number = :matterNumber"
         );
         return result.getResult();

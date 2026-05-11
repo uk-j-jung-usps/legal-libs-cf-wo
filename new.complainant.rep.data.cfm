@@ -32,14 +32,8 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 	ORDER BY c.start_date DESC
 </cfquery>
 
-<cfscript>
-if (qry_complainant_rep.recordCount > 0) {
-
-	comp_rep_fname = qry_complainant_rep.first_name;
-	comp_rep_lname = qry_complainant_rep.last_name;
-</cfscript>
-
-	<!--- Query Complainant Rep's company --->
+<!--- Run dependent queries only if complainant rep found --->
+<cfif qry_complainant_rep.recordCount GT 0>
 	<cfquery name="qry_complainant_rep_company" datasource="lawmanager">
 		SELECT name
 		FROM entity
@@ -48,15 +42,6 @@ if (qry_complainant_rep.recordCount > 0) {
 		  AND person_company_flag = 'C'
 	</cfquery>
 
-	<cfscript>
-	if (qry_complainant_rep_company.recordCount > 0) {
-		comp_rep_comp = qry_complainant_rep_company.name;
-	} else if (!hasPriorSubmission) {
-		comp_rep_comp = "";
-	}
-	</cfscript>
-
-	<!--- Query Complainant Rep's address --->
 	<cfquery name="qry_comp_rep_addr" datasource="lawmanager">
 		SELECT a.entity_key,
 			   trim(b.street) AS street,
@@ -68,18 +53,47 @@ if (qry_complainant_rep.recordCount > 0) {
 		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
 	</cfquery>
 
-	<cfscript>
+	<cfquery name="qry_comp_rep_phone" datasource="lawmanager">
+		SELECT a.entity_key, trim(b.phone_number) AS comp_rep_phone
+		FROM entity a
+		INNER JOIN phone b ON a.entity_key = b.entity_key
+		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
+		  AND b.phone_type_key IN (2, 3, 4, 6)
+	</cfquery>
+
+	<cfquery name="qry_comp_rep_fax" datasource="lawmanager">
+		SELECT a.entity_key, trim(b.phone_number) AS comp_rep_fax
+		FROM entity a
+		INNER JOIN phone b ON a.entity_key = b.entity_key
+		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
+		  AND b.phone_type_key = 5
+	</cfquery>
+</cfif>
+
+<cfscript>
+if (qry_complainant_rep.recordCount > 0) {
+
+	comp_rep_fname = qry_complainant_rep.first_name;
+	comp_rep_lname = qry_complainant_rep.last_name;
+
+	// --- Company ---
+	if (qry_complainant_rep_company.recordCount > 0) {
+		comp_rep_comp = qry_complainant_rep_company.name;
+	} else if (!hasPriorSubmission) {
+		comp_rep_comp = "";
+	}
+
+	// --- Address ---
 	if (qry_comp_rep_addr.recordCount > 0) {
 
-		// --- Street ---
+		// Street
 		if (len(qry_comp_rep_addr.street)) {
 			comp_rep_addr = qry_comp_rep_addr.street;
 		} else if (!hasPriorSubmission) {
 			comp_rep_addr = "";
 		}
 
-		// --- City / State / Zip ---
-		// If LM has the data, use it; otherwise parse from prior submission
+		// City / State / Zip
 		needsParse = false;
 
 		if (len(qry_comp_rep_addr.city)) {
@@ -109,7 +123,7 @@ if (qry_complainant_rep.recordCount > 0) {
 		}
 
 	} else {
-		// No address data in LawManager — fall back to prior submission
+		// No address data — fall back to prior submission
 		if (hasPriorSubmission && structKeyExists(variables, "comp_rep_citystzip")) {
 			parsed = parseRepCityStateZip(comp_rep_citystzip);
 			comp_rep_city  = parsed.city;
@@ -122,39 +136,17 @@ if (qry_complainant_rep.recordCount > 0) {
 			comp_rep_zip   = "";
 		}
 	}
-	</cfscript>
 
-	<!--- Query Complainant Rep's phone --->
-	<cfquery name="qry_comp_rep_phone" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS comp_rep_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
-		  AND b.phone_type_key IN (2, 3, 4, 6)
-	</cfquery>
-
-	<cfscript>
+	// --- Phone ---
 	comp_rep_phone = (qry_comp_rep_phone.recordCount > 0) ? qry_comp_rep_phone.comp_rep_phone : "";
-	</cfscript>
 
-	<!--- Query Complainant Rep's fax --->
-	<cfquery name="qry_comp_rep_fax" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS comp_rep_fax
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
-		  AND b.phone_type_key = 5
-	</cfquery>
-
-	<cfscript>
+	// --- Fax ---
 	if (qry_comp_rep_fax.recordCount > 0) {
 		comp_rep_fax = qry_comp_rep_fax.comp_rep_fax;
 	} else if (!hasPriorSubmission) {
 		comp_rep_fax = "";
 	}
-	</cfscript>
 
-<cfscript>
 } else {
 	// --- Complainant Rep not found in LawManager ---
 	if (hasPriorSubmission && structKeyExists(variables, "comp_rep_citystzip")) {

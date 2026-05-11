@@ -13,7 +13,7 @@
 
 	// If no matching matter found, redirect with error
 	if (qry_matter_no.recordCount EQ 0) {
-		location("case.files.home.cfm?matternoerror=Y", false);
+		location("new.case.files.home.cfm?matternoerror=Y", false);
 	}
 
 	mKey       = qry_matter_no.matter_key;
@@ -30,10 +30,10 @@
 		case 9: // EEOC
 			switch (mPrefix) {
 				case "WI":
-					location("wi/master.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
+					location("wi/.newmaster.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
 					break;
 				case "SL":
-					location("sl/master.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
+					location("sl/.newmaster.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
 					break;
 				default: // SF, WO, etc.
 					location("new.master.file.detail.display.eeoc.cfm?" & qsWithPrefix, false);
@@ -94,7 +94,7 @@ if (mTypeKey EQ 1) {
 		if (qry_advice_subpoena.recordCount) {
 			location("master.file.detail.display.advice_fssc.cfm?" & baseParams, false);
 		} else {
-			location("new.master.file.detail.display.other.cfm", false);
+			location("master.file.detail.display.other.cfm", false);
 		}
 	
 }

@@ -34,14 +34,8 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 	ORDER BY c.start_date DESC
 </cfquery>
 
-<cfscript>
-if (qry_aj.recordCount > 0) {
-
-	aj_fname = qry_aj.first_name;
-	aj_lname = qry_aj.last_name;
-</cfscript>
-
-	<!--- Query AJ's address --->
+<!--- Run dependent queries only if AJ found --->
+<cfif qry_aj.recordCount GT 0>
 	<cfquery name="qry_aj_addr" datasource="lawmanager">
 		SELECT a.entity_key,
 			   trim(initcap(b.street)) AS street,
@@ -53,14 +47,36 @@ if (qry_aj.recordCount > 0) {
 		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
 	</cfquery>
 
-	<cfscript>
+	<cfquery name="qry_aj_phone" datasource="lawmanager">
+		SELECT a.entity_key, trim(b.phone_number) AS aj_phone
+		FROM entity a
+		INNER JOIN phone b ON a.entity_key = b.entity_key
+		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
+		  AND b.phone_type_key IN (2, 3, 4, 6)
+	</cfquery>
+
+	<cfquery name="qry_aj_fax" datasource="lawmanager">
+		SELECT a.entity_key, trim(b.phone_number) AS aj_fax
+		FROM entity a
+		INNER JOIN phone b ON a.entity_key = b.entity_key
+		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
+		  AND b.phone_type_key = 5
+	</cfquery>
+</cfif>
+
+<cfscript>
+if (qry_aj.recordCount > 0) {
+
+	aj_fname = qry_aj.first_name;
+	aj_lname = qry_aj.last_name;
+
+	// --- Address ---
 	if (qry_aj_addr.recordCount > 0) {
 		aj_addr  = qry_aj_addr.street;
 		aj_city  = qry_aj_addr.city;
 		aj_state = qry_aj_addr.state;
 		aj_zip   = qry_aj_addr.zip_code;
 	} else {
-		// No address in LM — fall back to prior submission
 		if (hasPriorSubmission && structKeyExists(variables, "ajs_citystzip")) {
 			parsed   = parseAjCityStateZip(ajs_citystzip);
 			aj_city  = parsed.city;
@@ -73,39 +89,17 @@ if (qry_aj.recordCount > 0) {
 			aj_zip   = "";
 		}
 	}
-	</cfscript>
 
-	<!--- Query AJ's phone --->
-	<cfquery name="qry_aj_phone" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS aj_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
-		  AND b.phone_type_key IN (2, 3, 4, 6)
-	</cfquery>
-
-	<cfscript>
+	// --- Phone ---
 	aj_phone = (qry_aj_phone.recordCount > 0) ? qry_aj_phone.aj_phone : "";
-	</cfscript>
 
-	<!--- Query AJ's fax --->
-	<cfquery name="qry_aj_fax" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS aj_fax
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
-		  AND b.phone_type_key = 5
-	</cfquery>
-
-	<cfscript>
+	// --- Fax ---
 	if (qry_aj_fax.recordCount > 0) {
 		aj_fax = qry_aj_fax.aj_fax;
 	} else if (!hasPriorSubmission) {
 		aj_fax = "";
 	}
-	</cfscript>
 
-<cfscript>
 } else {
 	// --- AJ not found in LawManager ---
 	if (hasPriorSubmission && structKeyExists(variables, "ajs_citystzip")) {
