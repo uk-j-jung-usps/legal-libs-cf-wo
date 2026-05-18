@@ -7,9 +7,9 @@ function renderOption(value, currentValue = "") {
 </cfscript>
 
 <cfinclude template="new.submitted.data.dct.cfm">
-<cfinclude template="new,ausa.data.cfm">
-<cfinclude template="plaintiff.data.cfm">
-<cfinclude template="plaintiff.rep.data.cfm">
+<cfinclude template="new.ausa.data.cfm">
+<cfinclude template="new.plaintiff.data.cfm">
+<cfinclude template="new.plaintiff.rep.data.cfm">
 
 <cfscript>
 	// Default all variables to empty string if not yet defined
