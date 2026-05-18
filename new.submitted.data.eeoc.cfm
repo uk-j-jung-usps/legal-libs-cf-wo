@@ -57,7 +57,14 @@
 	for (row in qry_last_submitted_data) {
 		keyVal = toString(row.tempvar_key);
 		if (structKeyExists(tempvarMap, keyVal) && len(row.tempvar_key)) {
-			variables[tempvarMap[keyVal]] = trim(row.tempvar_value);
+			variables[tempvarMap[keyVal]] = len(trim(row.tempvar_value)) ? trim(row.tempvar_value) : "";
+		}
+	}
+
+	// Ensure all mapped variables exist (even if not returned by the query)
+	for (key in tempvarMap) {
+		if (!structKeyExists(variables, tempvarMap[key])) {
+			variables[tempvarMap[key]] = "";
 		}
 	}
 </cfscript>
