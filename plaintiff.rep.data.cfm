@@ -111,7 +111,7 @@
 	  select a.entity_key, trim(b.phone_number)as plaintiff_rep_phone
 	  from entity a, phone b
 	  where a.entity_key=#qry_plaintiff_rep.entity_key# and a.entity_key=b.entity_key and 
-	  (b.phone_type_key=2 or b.phone_type_key=3 or b.phone_type_key=4 or phone_type_key=6)
+	  (b.phone_type_key=2 or b.phone_type_key=3 or b.phone_type_key=4 or b.phone_type_key=6)
 	</cfquery>
 	<cfif qry_plaintiff_rep_phone.RecordCount gt 0>
 		<cfset plaintiff_rep_phone = qry_plaintiff_rep_phone.plaintiff_rep_phone>
