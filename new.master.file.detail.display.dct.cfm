@@ -40,7 +40,7 @@ function renderOption(value, currentValue = "") {
 <body>
 
 <cfoutput>
-<cfform action="save.input.data.cfm" method="post" name="entityform">
+<cfform action="new.save.input.data.cfm" method="post" name="entityform">
 
 	<input type="hidden" name="matterkey" value="#encodeForHTMLAttribute(url.matterkey)#">
 	<input type="hidden" name="matternumber" value="#encodeForHTMLAttribute(url.matternumber)#">
@@ -54,7 +54,7 @@ function renderOption(value, currentValue = "") {
 			<td colspan="3" class="TextMaingr" bgcolor="##D9E9EA">
 				<a href="new.case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
 				<a href="https://lawdept2.usps.gov/lmWeb/tabular.jsp?NB=MatterAllWS&QRY=|matter_key%3D#encodeForURL(url.matterkey)#" target="_blank">LawManager</a> &nbsp;&nbsp;&nbsp;
-				<a href="admin.pages.cfm">Legal Libs Admin</a>
+				<a href="new.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                admin.pages.cfm">Legal Libs Admin</a>
 			</td>
 			<td align="right" class="TextMaingr" bgcolor="##D9E9EA">WLO - District Court</td>
 		</tr>

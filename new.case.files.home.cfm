@@ -37,7 +37,7 @@
 		<!--- MSPB cases (matter_type_key = 8) --->
 		<cfcase value="8">
 			<cfif prefix EQ "SF" OR prefix EQ "WO">
-				<cflocation url="master.file.detail.display.mspb.cfm?#baseParams#" addtoken="false">
+				<cflocation url="new.master.file.detail.display.mspb.cfm?#baseParams#" addtoken="false">
 			</cfif>
 		</cfcase>
 
