@@ -17,9 +17,9 @@
 <!--- Retrieve attorney email from EADDRESS table for the selected attorney name --->
 <cfquery name="qry_attny_email" datasource="lawmanager">
 	SELECT c.eaddress
-	FROM entity a
-	INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
-	INNER JOIN eaddress c ON a.entity_key = c.entity_key
+	FROM lawmanager.entity a
+	INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
+	INNER JOIN lawmanager.eaddress c ON a.entity_key = c.entity_key
 	WHERE b.attorney_name = <cfqueryparam value="#attorney_name#" cfsqltype="cf_sql_varchar">
 </cfquery>
 
