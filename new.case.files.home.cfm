@@ -30,7 +30,7 @@
 		<!--- EEOC cases (matter_type_key = 9) --->
 		<cfcase value="9">
 			<cfif prefix EQ "SF" OR prefix EQ "WO">
-				<cflocation url="master.file.detail.display.eeoc.cfm?#baseParams#" addtoken="false">
+				<cflocation url="new.master.file.detail.display.eeoc.cfm?#baseParams#" addtoken="false">
 			</cfif>
 		</cfcase>
 
@@ -44,7 +44,7 @@
 		<!--- District Court cases (matter_type_key = 5) --->
 		<cfcase value="5">
 			<cfif prefix EQ "SF" OR prefix EQ "WO">
-				<cflocation url="master.file.detail.display.dct.cfm?#baseParams#" addtoken="false">
+				<cflocation url="new.master.file.detail.display.dct.cfm?#baseParams#" addtoken="false">
 			</cfif>
 		</cfcase>
 

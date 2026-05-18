@@ -76,7 +76,7 @@
 <cfswitch expression="#mattertypekey#">
 
 	<cfcase value="9">
-		<cfinclude template="process.cmft.matterkey.pairs.eeoc.cfm">
+		<cfinclude template="new.process.cmft.matterkey.pairs.eeoc.cfm">
 	</cfcase>
 
 	<cfcase value="8">
@@ -84,7 +84,7 @@
 	</cfcase>
 
 	<cfcase value="5">
-		<cfinclude template="process.cmft.matterkey.pairs.dct.cfm">
+		<cfinclude template="new.process.cmft.matterkey.pairs.dct.cfm">
 	</cfcase>
 
 	<cfcase value="1">
