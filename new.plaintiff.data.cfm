@@ -142,19 +142,28 @@
 
 <!--- Query Plaintiff's SSN --->
 <cfif qry_plaintiff.recordCount GT 0>
-	<cfquery name="qry_ssn" datasource="lawmanager">
-		SELECT ssn AS plaintiff_ssn
-		FROM lawmanager.hr.emp_xref
-		WHERE entity_key = <cfqueryparam value="#qry_plaintiff.entity_key#" cfsqltype="cf_sql_integer">
-	</cfquery>
+	<cftry>
+		<cfquery name="qry_ssn" datasource="lawmanager">
+			SELECT ssn AS plaintiff_ssn
+			FROM hr.emp_xref
+			WHERE entity_key = <cfqueryparam value="#qry_plaintiff.entity_key#" cfsqltype="cf_sql_integer">
+		</cfquery>
 
-	<cfscript>
-		if (qry_ssn.recordCount GT 0 && len(qry_ssn.plaintiff_ssn)) {
-			plaintiff_ssn = qry_ssn.plaintiff_ssn;
-		} else if (!hasSubmittedData) {
-			plaintiff_ssn = "";
-		}
-	</cfscript>
+		<cfscript>
+			if (qry_ssn.recordCount GT 0 && len(qry_ssn.plaintiff_ssn)) {
+				plaintiff_ssn = qry_ssn.plaintiff_ssn;
+			} else if (!hasSubmittedData) {
+				plaintiff_ssn = "";
+			}
+		</cfscript>
+	<cfcatch type="database">
+		<cfscript>
+			if (!structKeyExists(variables, "plaintiff_ssn")) {
+				plaintiff_ssn = "";
+			}
+		</cfscript>
+	</cfcatch>
+	</cftry>
 <cfelse>
 	<cfset plaintiff_ssn = "">
 </cfif>

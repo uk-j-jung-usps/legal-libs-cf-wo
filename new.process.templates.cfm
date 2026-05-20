@@ -30,7 +30,7 @@
 	<!--- Get the base_key from CMFT_BASE for this matter --->
 	<cfquery name="get_base_key" datasource="lawmanager">
 		SELECT base_key
-		FROM cmft_base
+		FROM lawmanager.cmft_base
 		WHERE matter_key = <cfqueryparam value="#matterkey#" cfsqltype="cf_sql_integer">
 	</cfquery>
 
