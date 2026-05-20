@@ -40,7 +40,7 @@ function renderOption(value, currentValue = "") {
 <body>
 
 <cfoutput>
-<cfform action="save.input.data.cfm" method="post" name="entityform">
+<cfform action="new.save.input.data.cfm" method="post" name="entityform">
 
 	<input type="hidden" name="matterkey" value="#encodeForHTMLAttribute(url.matterkey)#">
 	<input type="hidden" name="matternumber" value="#encodeForHTMLAttribute(url.matternumber)#">
@@ -266,7 +266,7 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_ohna_dist" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
+					FROM lawmanager.entity a
 					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'OHNA' AND b.group_prefix = 'WO'
 					ORDER BY b.sort_fld
