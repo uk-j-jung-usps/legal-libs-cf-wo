@@ -4,9 +4,9 @@
 		   trim(initcap(b.first_name)) AS first_name,
 		   trim(initcap(b.last_name)) AS last_name,
 		   trim(initcap(b.title)) AS title
-	FROM lawmmanager.matter a
-	INNER JOIN lawmmanager.matterentity c ON a.matter_key = c.matter_key
-	INNER JOIN lawmmanager.entity b ON b.entity_key = c.entity_key
+	FROM lawmanager.matter a
+	INNER JOIN lawmanager.matterentity c ON a.matter_key = c.matter_key
+	INNER JOIN lawmanager.entity b ON b.entity_key = c.entity_key
 	WHERE a.matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 	  AND c.matter_entity_type_key = 11
 </cfquery>

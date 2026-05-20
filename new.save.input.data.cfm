@@ -37,7 +37,7 @@
 <cfif qry_existing_template.recordCount EQ 0>
 
 	<!--- First-time insert into CMFT_BASE --->
-	<cfinclude template="process.cmft.base.cfm">
+	<cfinclude template="new.process.cmft.base.cfm">
 
 <cfelse>
 
@@ -80,7 +80,7 @@
 	</cfcase>
 
 	<cfcase value="8">
-		<cfinclude template="process.cmft.matterkey.pairs.mspb.cfm">
+		<cfinclude template="new.process.cmft.matterkey.pairs.mspb.cfm">
 	</cfcase>
 
 	<cfcase value="5">
@@ -89,8 +89,8 @@
 
 	<cfcase value="1">
 		<cfinclude template="process.cmft.matterkey.pairs.advice_fssc.cfm">
-		<cfinclude template="submit.templates.cfm">
-		<cflocation url="case.files.home.cfm?confirm_msg=Y" addtoken="no">
+		<cfinclude template="new.submit.templates.cfm">
+		<cflocation url="new.case.files.home.cfm?confirm_msg=Y" addtoken="no">
 	</cfcase>
 
 </cfswitch>

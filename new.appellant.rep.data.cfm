@@ -35,47 +35,45 @@ if (qry_appellant_rep.recordCount > 0) {
 
 	appellant_rep_fname = qry_appellant_rep.first_name;
 	appellant_rep_lname = qry_appellant_rep.last_name;
-</cfscript>
 
-	<!--- Query Appellant Rep's company --->
-	<cfquery name="qry_appellant_rep_company" datasource="lawmanager">
+	// --- Company ---
+	qry_appellant_rep_company = queryExecute("
 		SELECT name
 		FROM entity
-		WHERE entity_key = <cfqueryparam value="#qry_appellant_rep.entity_key#" cfsqltype="cf_sql_integer">
+		WHERE entity_key = :entityKey
 		  AND entity_type_key = 12
 		  AND person_company_flag = 'C'
-	</cfquery>
+	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });
 
-	<!--- Query Appellant Rep's address --->
-	<cfquery name="qry_appellant_rep_addr" datasource="lawmanager">
+	// --- Address ---
+	qry_appellant_rep_addr = queryExecute("
 		SELECT trim(b.street) AS street,
 			   trim(b.city) AS city,
 			   b.state,
 			   trim(b.zip_code) AS zip_code
 		FROM entity a
 		LEFT JOIN address b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_appellant_rep.entity_key#" cfsqltype="cf_sql_integer">
-	</cfquery>
+		WHERE a.entity_key = :entityKey
+	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });
 
-	<!--- Query Appellant Rep's phone (types: 2=business, 3=home, 4=mobile, 6=other) --->
-	<cfquery name="qry_appellant_rep_phone" datasource="lawmanager">
+	// --- Phone (types: 2=business, 3=home, 4=mobile, 6=other) ---
+	qry_appellant_rep_phone = queryExecute("
 		SELECT trim(b.phone_number) AS appellant_rep_phone
 		FROM entity a
 		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_appellant_rep.entity_key#" cfsqltype="cf_sql_integer">
+		WHERE a.entity_key = :entityKey
 		  AND b.phone_type_key IN (2, 3, 4, 6)
-	</cfquery>
+	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });
 
-	<!--- Query Appellant Rep's fax (type 5) --->
-	<cfquery name="qry_appellant_rep_fax" datasource="lawmanager">
+	// --- Fax (type 5) ---
+	qry_appellant_rep_fax = queryExecute("
 		SELECT trim(b.phone_number) AS appellant_rep_fax
 		FROM entity a
 		INNER JOIN phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_appellant_rep.entity_key#" cfsqltype="cf_sql_integer">
+		WHERE a.entity_key = :entityKey
 		  AND b.phone_type_key = 5
-	</cfquery>
+	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });
 
-<cfscript>
 	// Company
 	appellant_rep_company = (qry_appellant_rep_company.recordCount > 0) ? qry_appellant_rep_company.name : "";
 
@@ -86,7 +84,7 @@ if (qry_appellant_rep.recordCount > 0) {
 		if (len(qry_appellant_rep_addr.city)) {
 			appellant_rep_city = qry_appellant_rep_addr.city;
 		} else if (structKeyExists(variables, "appellant_rep_citystzip") && len(appellant_rep_citystzip)) {
-			var parsed = parseRepCityStZip(appellant_rep_citystzip);
+			parsed = parseRepCityStZip(appellant_rep_citystzip);
 			appellant_rep_city = parsed.city;
 		} else {
 			appellant_rep_city = "";
@@ -95,8 +93,8 @@ if (qry_appellant_rep.recordCount > 0) {
 		if (len(qry_appellant_rep_addr.state)) {
 			appellant_rep_state = qry_appellant_rep_addr.state;
 		} else if (structKeyExists(variables, "appellant_rep_citystzip") && len(appellant_rep_citystzip)) {
-			var parsed2 = parseRepCityStZip(appellant_rep_citystzip);
-			appellant_rep_state = parsed2.state;
+			parsed = parseRepCityStZip(appellant_rep_citystzip);
+			appellant_rep_state = parsed.state;
 		} else {
 			appellant_rep_state = "";
 		}
@@ -104,18 +102,18 @@ if (qry_appellant_rep.recordCount > 0) {
 		if (len(qry_appellant_rep_addr.zip_code)) {
 			appellant_rep_zip = qry_appellant_rep_addr.zip_code;
 		} else if (structKeyExists(variables, "appellant_rep_citystzip") && len(appellant_rep_citystzip)) {
-			var parsed3 = parseRepCityStZip(appellant_rep_citystzip);
-			appellant_rep_zip = parsed3.zip;
+			parsed = parseRepCityStZip(appellant_rep_citystzip);
+			appellant_rep_zip = parsed.zip;
 		} else {
 			appellant_rep_zip = "";
 		}
 	} else {
 		// No address in LM — parse from previously submitted citystzip if available
 		if (structKeyExists(variables, "appellant_rep_citystzip") && len(appellant_rep_citystzip)) {
-			var parsed4 = parseRepCityStZip(appellant_rep_citystzip);
-			appellant_rep_city  = parsed4.city;
-			appellant_rep_state = parsed4.state;
-			appellant_rep_zip   = parsed4.zip;
+			parsed = parseRepCityStZip(appellant_rep_citystzip);
+			appellant_rep_city  = parsed.city;
+			appellant_rep_state = parsed.state;
+			appellant_rep_zip   = parsed.zip;
 		} else {
 			appellant_rep_addr  = "";
 			appellant_rep_city  = "";
@@ -133,10 +131,10 @@ if (qry_appellant_rep.recordCount > 0) {
 } else {
 	// No appellant rep found in LawManager — parse from submitted data or initialize empty
 	if (structKeyExists(variables, "appellant_rep_citystzip") && len(trim(variables.appellant_rep_citystzip))) {
-		var parsed5 = parseRepCityStZip(appellant_rep_citystzip);
-		if (!structKeyExists(variables, "appellant_rep_city"))  { appellant_rep_city  = parsed5.city; }
-		if (!structKeyExists(variables, "appellant_rep_state")) { appellant_rep_state = parsed5.state; }
-		if (!structKeyExists(variables, "appellant_rep_zip"))   { appellant_rep_zip   = parsed5.zip; }
+		parsed = parseRepCityStZip(appellant_rep_citystzip);
+		if (!structKeyExists(variables, "appellant_rep_city"))  { appellant_rep_city  = parsed.city; }
+		if (!structKeyExists(variables, "appellant_rep_state")) { appellant_rep_state = parsed.state; }
+		if (!structKeyExists(variables, "appellant_rep_zip"))   { appellant_rep_zip   = parsed.zip; }
 	}
 	// Ensure all appellant rep variables exist
 	defaultVars = "appellant_rep_fname,appellant_rep_lname,appellant_rep_company,appellant_rep_addr,appellant_rep_city,appellant_rep_state,appellant_rep_zip,appellant_rep_phone,appellant_rep_fax";
