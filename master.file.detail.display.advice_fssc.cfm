@@ -120,7 +120,7 @@ function renderRadio(fieldName, currentValue = "", tabYes, tabNo, onClickYes = "
 <body>
 
 <cfoutput>
-<cfform id="fssc" action="new.save.input.data.cfm" method="post" name="advice_subpoena">
+<cfform id="fssc" action="save.input.data.cfm" method="post" name="advice_subpoena">
 
 	<input type="hidden" name="matterkey" value="#encodeForHTMLAttribute(url.matterkey)#">
 	<input type="hidden" name="mattertypekey" value="#encodeForHTMLAttribute(url.mattertypekey)#">
@@ -131,7 +131,7 @@ function renderRadio(fieldName, currentValue = "", tabYes, tabNo, onClickYes = "
 		<!--- Navigation Bar --->
 		<tr>
 			<td colspan="2" class="TextMaingr" bgcolor="##D9E9EA">
-				<a href="new.case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
+				<a href="case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
 				<a href="https://lawdept2.usps.gov/lmWeb/tabular.jsp?NB=MatterAllWS&QRY=|matter_key%3D#encodeForURL(url.matterkey)#" target="_blank">LawManager</a>
 			</td>
 			<td align="right" class="TextMaingr" colspan="5" bgcolor="##D9E9EA"><b>Advice-FSSC</b></td>

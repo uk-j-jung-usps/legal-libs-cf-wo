@@ -1,7 +1,7 @@
 <cfscript>
 // Retrieve the base_key from CMFT_BASE for this matter_key
 get_base_key = queryExecute(
-	"SELECT base_key FROM cmft_base WHERE matter_key = :matterKey",
+	"SELECT base_key FROM lawmanager.cmft_base WHERE matter_key = :matterKey",
 	{ matterKey = { value = matterkey, cfsqltype = "cf_sql_integer" } },
 	{ datasource = "lawmanager" }
 );

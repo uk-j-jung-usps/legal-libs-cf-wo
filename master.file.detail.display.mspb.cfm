@@ -6,10 +6,10 @@ function renderOption(value, currentValue = "") {
 }
 </cfscript>
 
-<cfinclude template="new.submitted.data.mspb.cfm">
-<cfinclude template="new.admin.judge.data.cfm">
-<cfinclude template="new.appellant.data.cfm">
-<cfinclude template="new.appellant.rep.data.cfm">
+<cfinclude template="submitted.data.mspb.cfm">
+<cfinclude template="admin.judge.data.cfm">
+<cfinclude template="appellant.data.cfm">
+<cfinclude template="appellant.rep.data.cfm">
 
 <cfscript>
 	// Default all variables to empty string if not yet defined
@@ -52,9 +52,9 @@ function renderOption(value, currentValue = "") {
 		<!--- Navigation Bar --->
 		<tr>
 			<td colspan="3" class="TextMaingr" bgcolor="##D9E9EA">
-				<a href="new.case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
+				<a href="case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
 				<a href="https://lawdept2.usps.gov/lmWeb/tabular.jsp?NB=MatterAllWS&QRY=|matter_key%3D#encodeForURL(url.matterkey)#" target="_blank">LawManager</a> &nbsp;&nbsp;&nbsp;
-				<a href="new.admin.pages.cfm">Legal Libs Admin</a>
+				<a href="admin.pages.cfm">Legal Libs Admin</a>
 			</td>
 			<td align="right" class="TextMaingr" bgcolor="##D9E9EA">WLO - MSPB</td>
 		</tr>

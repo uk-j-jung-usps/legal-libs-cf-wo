@@ -76,23 +76,23 @@
 <cfswitch expression="#mattertypekey#">
 
 	<cfcase value="9">
-		<cfinclude template="new.process.cmft.matterkey.pairs.eeoc.cfm">
+		<cfinclude template="process.cmft.matterkey.pairs.eeoc.cfm">
 	</cfcase>
 
 	<cfcase value="8">
-		<cfinclude template="new.process.cmft.matterkey.pairs.mspb.cfm">
+		<cfinclude template="process.cmft.matterkey.pairs.mspb.cfm">
 	</cfcase>
 
 	<cfcase value="5">
-		<cfinclude template="new.process.cmft.matterkey.pairs.dct.cfm">
+		<cfinclude template="process.cmft.matterkey.pairs.dct.cfm">
 	</cfcase>
 
 	<cfcase value="1">
-		<cfinclude template="new.process.cmft.matterkey.pairs.advice_fssc.cfm">
-		<cfinclude template="new.submit.templates.cfm">
-		<cflocation url="new.case.files.home.cfm?confirm_msg=Y" addtoken="no">
+		<cfinclude template="process.cmft.matterkey.pairs.advice_fssc.cfm">
+		<cfinclude template="submit.templates.cfm">
+		<cflocation url="case.files.home.cfm?confirm_msg=Y" addtoken="no">
 	</cfcase>
 
 </cfswitch>
 
-<cflocation url="new.template.list.display.cfm?matterkey=#encodeForURL(matterkey)#&matternumber=#encodeForURL(matternumber)#&mattertypekey=#encodeForURL(mattertypekey)#&ownerkey=#encodeForURL(owner_key)#" addtoken="no">
+<cflocation url="template.list.display.cfm?matterkey=#encodeForURL(matterkey)#&matternumber=#encodeForURL(matternumber)#&mattertypekey=#encodeForURL(mattertypekey)#&ownerkey=#encodeForURL(owner_key)#" addtoken="no">

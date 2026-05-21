@@ -30,21 +30,21 @@
 		<!--- EEOC cases (matter_type_key = 9) --->
 		<cfcase value="9">
 			<cfif prefix EQ "SF" OR prefix EQ "WO">
-				<cflocation url="new.master.file.detail.display.eeoc.cfm?#baseParams#" addtoken="false">
+				<cflocation url="master.file.detail.display.eeoc.cfm?#baseParams#" addtoken="false">
 			</cfif>
 		</cfcase>
 
 		<!--- MSPB cases (matter_type_key = 8) --->
 		<cfcase value="8">
 			<cfif prefix EQ "SF" OR prefix EQ "WO">
-				<cflocation url="new.master.file.detail.display.mspb.cfm?#baseParams#" addtoken="false">
+				<cflocation url="master.file.detail.display.mspb.cfm?#baseParams#" addtoken="false">
 			</cfif>
 		</cfcase>
 
 		<!--- District Court cases (matter_type_key = 5) --->
 		<cfcase value="5">
 			<cfif prefix EQ "SF" OR prefix EQ "WO">
-				<cflocation url="new.master.file.detail.display.dct.cfm?#baseParams#" addtoken="false">
+				<cflocation url="master.file.detail.display.dct.cfm?#baseParams#" addtoken="false">
 			</cfif>
 		</cfcase>
 
@@ -112,7 +112,7 @@
 	</head>
 	<body>
 
-		<cfform action="new.lm_matter_no.cfm" method="post" name="mainform">
+		<cfform action="lm_matter_no.cfm" method="post" name="mainform">
 
 			<div class="styleSelect">
 				<div class="container">

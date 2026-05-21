@@ -40,7 +40,7 @@ function renderOption(value, currentValue = "") {
 </cfscript>
 
 <cfoutput>
-<cfform action="new.save.input.data.cfm" method="post" name="entityform">
+<cfform action="save.input.data.cfm" method="post" name="entityform">
 
 	<input type="hidden" name="matterkey" value="#encodeForHTMLAttribute(url.matterkey)#">
 	<input type="hidden" name="matternumber" value="#encodeForHTMLAttribute(url.matternumber)#">
@@ -52,7 +52,7 @@ function renderOption(value, currentValue = "") {
 		<!--- Navigation Bar --->
 		<tr>
 			<td colspan="3" class="TextMaingr" bgcolor="##D9E9EA">
-				<a href="new.case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
+				<a href="case.files.home.cfm">Home</a> &nbsp;&nbsp;&nbsp;
 				<a href="https://lawdept2.usps.gov/lmWeb/tabular.jsp?NB=MatterAllWS&QRY=|matter_key%3D#encodeForURL(url.matterkey)#" target="_blank">LawManager</a> &nbsp;&nbsp;&nbsp;
 				<a href="admin.pages.cfm">Legal Libs Admin</a>
 			</td>
@@ -178,10 +178,10 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_lr_mgr" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'LRMGR' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="lr_mgr" size="1" tabindex="35">
 					<cfloop query="qry_lr_mgr">
@@ -199,10 +199,10 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_hr_mgr" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'HRMGR' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="hr_mgr" size="1" tabindex="39">
 					<cfloop query="qry_hr_mgr">
@@ -220,10 +220,10 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_dist_mgr" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'DMGR' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="dist_mgr" size="1" tabindex="40">
 					<option value="">Select One...</option>
@@ -242,10 +242,10 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_hr_mgr_dist" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'HRDST' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="hr_mgr_dist" size="1" tabindex="41">
 					<option value="">Select One...</option>
@@ -262,7 +262,7 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_eeoc_no_list" datasource="lawmanager">
 					SELECT forum_number
-					FROM forum
+					FROM lawmanager.forum
 					WHERE matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 				</cfquery>
 				<select name="eeoc_no" size="1" tabindex="16">
@@ -276,10 +276,10 @@ function renderOption(value, currentValue = "") {
 			<td>
 				<cfquery name="qry_ohna_dist" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'OHNA' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="ohna_dist" size="1" tabindex="39">
 					<cfloop query="qry_ohna_dist">
@@ -353,10 +353,10 @@ function renderOption(value, currentValue = "") {
 			<td width="30%">
 				<cfquery name="qry_attorney" datasource="lawmanager">
 					SELECT b.entity_key, b.attorney_name AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'ATTNY' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="attorney_name" size="1" tabindex="46">
 					<cfloop query="qry_attorney">
@@ -393,10 +393,10 @@ function renderOption(value, currentValue = "") {
 			<td width="30%">
 				<cfquery name="qry_paralgl" datasource="lawmanager">
 					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM entity a
-					INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
+					FROM lawmanager.entity a
+					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
 					WHERE b.entity_role = 'PLGL' AND b.group_prefix = 'WO'
-					ORDER BY sort_fld
+					ORDER BY b.sort_fld
 				</cfquery>
 				<select name="paralgl_name" size="1" tabindex="48">
 					<cfloop query="qry_paralgl">
