@@ -24,9 +24,9 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 	SELECT b.entity_key,
 		   trim(initcap(b.first_name)) AS first_name,
 		   trim(initcap(b.last_name)) AS last_name
-	FROM matter a
-	INNER JOIN matterentity c ON a.matter_key = c.matter_key
-	INNER JOIN entity b ON b.entity_key = c.entity_key
+	FROM lawmanager.matter a
+	INNER JOIN lawmanager.matterentity c ON a.matter_key = c.matter_key
+	INNER JOIN lawmanager.entity b ON b.entity_key = c.entity_key
 	WHERE a.matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 	  AND c.matter_entity_type_key = 21
 	ORDER BY c.start_date DESC
@@ -36,7 +36,7 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 <cfif qry_complainant_rep.recordCount GT 0>
 	<cfquery name="qry_complainant_rep_company" datasource="lawmanager">
 		SELECT name
-		FROM entity
+		FROM lawmanager.entity
 		WHERE entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
 		  AND entity_type_key = 21
 		  AND person_company_flag = 'C'
@@ -48,23 +48,23 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 			   trim(b.city) AS city,
 			   b.state,
 			   trim(b.zip_code) AS zip_code
-		FROM entity a
-		INNER JOIN address b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.address b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
 	</cfquery>
 
 	<cfquery name="qry_comp_rep_phone" datasource="lawmanager">
 		SELECT a.entity_key, trim(b.phone_number) AS comp_rep_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
 		  AND b.phone_type_key IN (2, 3, 4, 6)
 	</cfquery>
 
 	<cfquery name="qry_comp_rep_fax" datasource="lawmanager">
 		SELECT a.entity_key, trim(b.phone_number) AS comp_rep_fax
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_complainant_rep.entity_key#" cfsqltype="cf_sql_integer">
 		  AND b.phone_type_key = 5
 	</cfquery>

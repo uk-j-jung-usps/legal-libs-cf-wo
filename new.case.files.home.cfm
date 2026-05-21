@@ -60,15 +60,15 @@
             </cfscript>
 
 			<cfif qry_advice_subpoena.recordCount GT 0>
-				<cflocation url="master.file.detail.display.advice_fssc.cfm?#baseParams#" addtoken="false">
+				<cflocation url="new.master.file.detail.display.advice_fssc.cfm?#baseParams#" addtoken="false">
 			<cfelse>
-				<cflocation url="master.file.detail.display.other.cfm" addtoken="false">
+				<cflocation url="new.master.file.detail.display.other.cfm" addtoken="false">
 			</cfif>
 		</cfcase>
 
 		<!--- All other case types --->
 		<cfdefaultcase>
-			<cflocation url="master.file.detail.display.other.cfm" addtoken="false">
+			<cflocation url="new.master.file.detail.display.other.cfm" addtoken="false">
 		</cfdefaultcase>
 
 	</cfswitch>

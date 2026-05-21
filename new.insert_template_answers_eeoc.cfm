@@ -8,7 +8,7 @@
 
 <!--- Clear any previous answer for this matter's dynamic question (key 23) --->
 <cfquery name="delete_cmft_dynamic_ans" datasource="lawmanager">
-	DELETE FROM cmft_dynamic_ans
+	DELETE FROM lawmanager.cmft_dynamic_ans
 	WHERE matter_key = <cfqueryparam value="#matterkey#" cfsqltype="cf_sql_integer">
 	  AND dynamic_quest_key = <cfqueryparam value="23" cfsqltype="cf_sql_integer">
 </cfquery>

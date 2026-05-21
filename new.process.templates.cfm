@@ -22,7 +22,7 @@
 				<cfinclude template="new.insert_template_answers_eeoc.cfm">
 			</cfcase>
 			<cfcase value="8">
-				<cfinclude template="insert_template_answers_mspb.cfm">
+				<cfinclude template="new.insert_template_answers_mspb.cfm">
 			</cfcase>
 		</cfswitch>
 	</cfif>

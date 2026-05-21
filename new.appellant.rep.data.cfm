@@ -23,9 +23,9 @@ function parseRepCityStZip(citystzip) {
 	SELECT b.entity_key,
 		   trim(initcap(b.first_name)) AS first_name,
 		   trim(initcap(b.last_name)) AS last_name
-	FROM matter a
-	INNER JOIN matterentity c ON a.matter_key = c.matter_key
-	INNER JOIN entity b ON b.entity_key = c.entity_key
+	FROM lawmanager.matter a
+	INNER JOIN lawmanager.matterentity c ON a.matter_key = c.matter_key
+	INNER JOIN lawmanager.entity b ON b.entity_key = c.entity_key
 	WHERE a.matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 	  AND c.matter_entity_type_key = 12
 </cfquery>
@@ -39,7 +39,7 @@ if (qry_appellant_rep.recordCount > 0) {
 	// --- Company ---
 	qry_appellant_rep_company = queryExecute("
 		SELECT name
-		FROM entity
+		FROM lawmanager.entity
 		WHERE entity_key = :entityKey
 		  AND entity_type_key = 12
 		  AND person_company_flag = 'C'
@@ -51,16 +51,16 @@ if (qry_appellant_rep.recordCount > 0) {
 			   trim(b.city) AS city,
 			   b.state,
 			   trim(b.zip_code) AS zip_code
-		FROM entity a
-		LEFT JOIN address b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		LEFT JOIN lawmanager.address b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = :entityKey
 	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });
 
 	// --- Phone (types: 2=business, 3=home, 4=mobile, 6=other) ---
 	qry_appellant_rep_phone = queryExecute("
 		SELECT trim(b.phone_number) AS appellant_rep_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = :entityKey
 		  AND b.phone_type_key IN (2, 3, 4, 6)
 	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });
@@ -68,8 +68,8 @@ if (qry_appellant_rep.recordCount > 0) {
 	// --- Fax (type 5) ---
 	qry_appellant_rep_fax = queryExecute("
 		SELECT trim(b.phone_number) AS appellant_rep_fax
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = :entityKey
 		  AND b.phone_type_key = 5
 	", { entityKey: { value: qry_appellant_rep.entity_key, cfsqltype: "cf_sql_integer" } }, { datasource: "lawmanager" });

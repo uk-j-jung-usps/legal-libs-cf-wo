@@ -30,10 +30,10 @@
 		case 9: // EEOC
 			switch (mPrefix) {
 				case "WI":
-					location("wi/.newmaster.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
+					location("wi/master.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
 					break;
 				case "SL":
-					location("sl/.newmaster.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
+					location("sl/master.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
 					break;
 				default: // SF, WO, etc.
 					location("new.master.file.detail.display.eeoc.cfm?" & qsWithPrefix, false);
@@ -92,9 +92,9 @@ if (mTypeKey EQ 1) {
         baseParams = "matterkey=#matterKey#&matternumber=#matterNumber#&mattertypekey=#matterTypeKey#&mattername=#matterName#";
     
 		if (qry_advice_subpoena.recordCount) {
-			location("master.file.detail.display.advice_fssc.cfm?" & baseParams, false);
+			location("new.master.file.detail.display.advice_fssc.cfm?" & baseParams, false);
 		} else {
-			location("master.file.detail.display.other.cfm", false);
+			location("new.master.file.detail.display.other.cfm", false);
 		}
 	
 }
