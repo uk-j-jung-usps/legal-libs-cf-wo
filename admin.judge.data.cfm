@@ -26,9 +26,9 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 	SELECT b.entity_key,
 		   trim(initcap(b.first_name)) AS first_name,
 		   trim(initcap(b.last_name)) AS last_name
-	FROM matter a
-	INNER JOIN matterentity c ON a.matter_key = c.matter_key
-	INNER JOIN entity b ON b.entity_key = c.entity_key
+	FROM lawmanager.matter a
+	INNER JOIN lawmanager.matterentity c ON a.matter_key = c.matter_key
+	INNER JOIN lawmanager.entity b ON b.entity_key = c.entity_key
 	WHERE a.matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 	  AND c.matter_entity_type_key IN (15, 48, 49, 50, 51, 52)
 	ORDER BY c.start_date DESC
@@ -42,23 +42,23 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 			   trim(initcap(b.city)) AS city,
 			   b.state,
 			   trim(b.zip_code) AS zip_code
-		FROM entity a
-		INNER JOIN address b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.address b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
 	</cfquery>
 
 	<cfquery name="qry_aj_phone" datasource="lawmanager">
 		SELECT a.entity_key, trim(b.phone_number) AS aj_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
 		  AND b.phone_type_key IN (2, 3, 4, 6)
 	</cfquery>
 
 	<cfquery name="qry_aj_fax" datasource="lawmanager">
 		SELECT a.entity_key, trim(b.phone_number) AS aj_fax
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
 		  AND b.phone_type_key = 5
 	</cfquery>

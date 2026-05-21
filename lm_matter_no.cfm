@@ -13,7 +13,7 @@
 
 	// If no matching matter found, redirect with error
 	if (qry_matter_no.recordCount EQ 0) {
-		location("new.case.files.home.cfm?matternoerror=Y", false);
+		location("case.files.home.cfm?matternoerror=Y", false);
 	}
 
 	mKey       = qry_matter_no.matter_key;
@@ -30,13 +30,13 @@
 		case 9: // EEOC
 			switch (mPrefix) {
 				case "WI":
-					location("wi/.newmaster.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
+					location("wi/master.file.detail.display.eeoc_WI.cfm?" & qsWithPrefix, false);
 					break;
 				case "SL":
-					location("sl/.newmaster.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
+					location("sl/master.file.detail.display.eeoc_SL.cfm?" & qsWithPrefix, false);
 					break;
 				default: // SF, WO, etc.
-					location("new.master.file.detail.display.eeoc.cfm?" & qsWithPrefix, false);
+					location("master.file.detail.display.eeoc.cfm?" & qsWithPrefix, false);
 					break;
 			}
 			break;
@@ -50,7 +50,7 @@
 					location("sl/master.file.detail.display.mspb_SL.cfm?" & qsWithPrefix, false);
 					break;
 				default: // SF, WO
-					location("new.master.file.detail.display.mspb.cfm?" & qsWithoutPrefix, false);
+					location("master.file.detail.display.mspb.cfm?" & qsWithoutPrefix, false);
 					break;
 			}
 			break;
@@ -64,7 +64,7 @@
 					location("sl/master.file.detail.display.dct_SL.cfm?" & qsWithoutPrefix, false);
 					break;
 				default: // SF, WO
-					location("new.master.file.detail.display.dct.cfm?" & qsWithoutPrefix, false);
+					location("master.file.detail.display.dct.cfm?" & qsWithoutPrefix, false);
 					break;
 			}
 			break;
@@ -74,7 +74,7 @@
 			break;
 
 		default:
-			location("new.master.file.detail.display.other.cfm", false);
+			location("master.file.detail.display.other.cfm", false);
 			break;
 	}
 

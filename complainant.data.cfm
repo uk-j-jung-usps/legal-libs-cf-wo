@@ -54,8 +54,8 @@ hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
 	<!--- Query Complainant's phone --->
 	<cfquery name="qry_comp_phone" datasource="lawmanager">
 		SELECT a.entity_key, trim(b.phone_number) AS comp_phone
-		FROM entity a
-		INNER JOIN phone b ON a.entity_key = b.entity_key
+		FROM lawmanager.entity a
+		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
 		WHERE a.entity_key = <cfqueryparam value="#qry_complainant.entity_key#" cfsqltype="cf_sql_integer">
 	</cfquery>
 
@@ -166,7 +166,7 @@ if (qry_complainant.recordCount > 0) {
 <!--- Query case's agency number --->
 <cfquery name="qry_agency_no" datasource="lawmanager">
 	SELECT forum_number
-	FROM forum
+	FROM lawmanager.forum
 	WHERE matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 	  AND venue_type_key = 1101
 	  AND forum_type_key = 1
@@ -183,7 +183,7 @@ if (qry_agency_no.recordCount > 0) {
 <!--- Query case's EEOC number (latest if more than one) --->
 <cfquery name="qry_eeoc_no" datasource="lawmanager">
 	SELECT forum_number
-	FROM forum
+	FROM lawmanager.forum
 	WHERE matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
 	  AND venue_type_key LIKE '8%'
 	ORDER BY forum_number DESC

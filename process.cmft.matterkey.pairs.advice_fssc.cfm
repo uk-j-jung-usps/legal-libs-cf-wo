@@ -1,9 +1,9 @@
 <cfscript>
 // Insert user-selected answers to template questions per user/matterkey
-cfinclude(template="new.advice_fssc_cmft_dynamic_ans_insert.cfm");
+cfinclude(template="advice_fssc_cmft_dynamic_ans_insert.cfm");
 
 // Insert a single record in cmft_selected_templates for advice FSSC template per user/matterkey
-cfinclude(template="new.advice_fssc_cmft_selected_templates_insert.cfm");
+cfinclude(template="advice_fssc_cmft_selected_templates_insert.cfm");
 
 // Retrieve all relevant template variables for Advice-FSSC
 qry_cmft_tempvars = queryExecute(

@@ -10,7 +10,7 @@
 	<cfoutput>
 	<script>
 		alert("Please select at least one template!");
-		location.href = "new.template.list.display.cfm?matterkey=#encodeForJavaScript(matterkey)#&matternumber=#encodeForJavaScript(matternumber)#&mattertypekey=#encodeForJavaScript(mattertypekey)#&ownerkey=#encodeForJavaScript(ownerkey)#";
+		location.href = "template.list.display.cfm?matterkey=#encodeForJavaScript(matterkey)#&matternumber=#encodeForJavaScript(matternumber)#&mattertypekey=#encodeForJavaScript(mattertypekey)#&ownerkey=#encodeForJavaScript(ownerkey)#";
 	</script>
 	</cfoutput>
 <cfelse>
@@ -19,7 +19,7 @@
 	<cfif isDefined("owcp_answer")>
 		<cfswitch expression="#mattertypekey#">
 			<cfcase value="9">
-				<cfinclude template="new.insert_template_answers_eeoc.cfm">
+				<cfinclude template="insert_template_answers_eeoc.cfm">
 			</cfcase>
 			<cfcase value="8">
 				<cfinclude template="insert_template_answers_mspb.cfm">
@@ -51,7 +51,7 @@
 	</cfloop>
 
 	<!--- Execute the batch file that runs the Java program --->
-	<cfinclude template="new.submit.templates.cfm">
-	<cflocation url="new.case.files.home.cfm?confirm_msg=Y" addtoken="no">
+	<cfinclude template="submit.templates.cfm">
+	<cflocation url="case.files.home.cfm?confirm_msg=Y" addtoken="no">
 
 </cfif>
