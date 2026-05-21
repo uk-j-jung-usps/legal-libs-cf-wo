@@ -88,7 +88,7 @@
 	</cfcase>
 
 	<cfcase value="1">
-		<cfinclude template="process.cmft.matterkey.pairs.advice_fssc.cfm">
+		<cfinclude template="new.process.cmft.matterkey.pairs.advice_fssc.cfm">
 		<cfinclude template="new.submit.templates.cfm">
 		<cflocation url="new.case.files.home.cfm?confirm_msg=Y" addtoken="no">
 	</cfcase>
