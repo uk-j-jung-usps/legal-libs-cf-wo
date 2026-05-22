@@ -1,9 +1,15 @@
-<cfscript>
-// Helper function: Render a select option with proper selected state
-function renderOption(value, currentValue = "") {
-	var isSelected = (len(trim(arguments.currentValue)) && trim(arguments.currentValue) EQ trim(arguments.value)) ? ' selected="selected"' : '';
-	return '<option value="#encodeForHTMLAttribute(arguments.value)#"#isSelected#>#encodeForHTML(arguments.value)#</option>';
-}
+﻿<cfscript>
+// Instantiate DCT display component
+dctComponent = new components.master_file_display_dct_component();
+
+// Pre-fetch all entity list queries
+qry_lr_mgr      = dctComponent.getEntityListByRole("LRMGR");
+qry_hr_mgr      = dctComponent.getEntityListByRole("HRMGR");
+qry_dist_mgr    = dctComponent.getEntityListByRole("DMGR");
+qry_hr_mgr_dist = dctComponent.getEntityListByRole("HRDST");
+qry_ohna_dist   = dctComponent.getEntityListByRole("OHNA");
+qry_paralgl     = dctComponent.getEntityListByRole("PLGL");
+qry_attorney    = dctComponent.getAttorneyList();
 </cfscript>
 
 <cfinclude template="submitted.data.dct.cfm">
@@ -66,8 +72,8 @@ function renderOption(value, currentValue = "") {
 			<td width="15%" align="right" class="TextMaingr">Mr. / Ms.</td>
 			<td>
 				<select name="ausa_prefix" size="1" tabindex="32">
-					#renderOption("Mr.", ausa_prefix)#
-					#renderOption("Ms.", ausa_prefix)#
+					#dctComponent.renderOption("Mr.", ausa_prefix)#
+					#dctComponent.renderOption("Ms.", ausa_prefix)#
 				</select>
 			</td>
 		</tr>
@@ -114,7 +120,7 @@ function renderOption(value, currentValue = "") {
 					<option value=""> </option>
 					<cfset ausaDistricts = "Central District of California|District of Hawaii|Eastern District of California|Northern District|Southern District of California">
 					<cfloop list="#ausaDistricts#" delimiters="|" index="district">
-						#renderOption(district, ausa_district)#
+						#dctComponent.renderOption(district, ausa_district)#
 					</cfloop>
 				</select>
 			</td>
@@ -134,7 +140,7 @@ function renderOption(value, currentValue = "") {
 				<select name="ausa_addr1" size="1" tabindex="38">
 					<option value=""> </option>
 					<cfloop list="#ausaAddr1Options#" delimiters="|" index="addr">
-						#renderOption(addr, ausa_addr1)#
+						#dctComponent.renderOption(addr, ausa_addr1)#
 					</cfloop>
 				</select>
 			</td>
@@ -149,7 +155,7 @@ function renderOption(value, currentValue = "") {
 				<cfset ausaAddr2Options = "450 Golden Gate Avenue, Box 36055|501 I Street, Ste 10-100|300 N. Los Angeles Street|880 Front Street, Rm 6293|300 Ala Moana Blvd. Rm 6-100|2500 Tulare Street, Suite 4401">
 				<select name="ausa_addr2" size="1" tabindex="39">
 					<cfloop list="#ausaAddr2Options#" delimiters="|" index="addr">
-						#renderOption(addr, ausa_addr2)#
+						#dctComponent.renderOption(addr, ausa_addr2)#
 					</cfloop>
 				</select>
 			</td>
@@ -164,7 +170,7 @@ function renderOption(value, currentValue = "") {
 				<cfset ausaCityOptions = "San Francisco, CA 94102-3495|Sacramento, CA 95814|Los Angeles, CA 90012|San Diego, CA 92101|Honolulu, HI 96850|Fresno, CA 93721">
 				<select name="ausa_citystzip" size="1" tabindex="40">
 					<cfloop list="#ausaCityOptions#" delimiters="|" index="city">
-						#renderOption(city, ausa_citystzip)#
+						#dctComponent.renderOption(city, ausa_citystzip)#
 					</cfloop>
 				</select>
 			</td>
@@ -179,14 +185,14 @@ function renderOption(value, currentValue = "") {
 				<cfset ausaPhones = "415-436-7200|916-554-2700|213-894-2404|213-894-2458|619-557-5610|808-541-2850|559-497-4019">
 				<select name="ausa_phone" size="1" tabindex="41">
 					<cfloop list="#ausaPhones#" delimiters="|" index="phone">
-						#renderOption(phone, ausa_phone)#
+						#dctComponent.renderOption(phone, ausa_phone)#
 					</cfloop>
 				</select>
 				&nbsp;AUSA Fax&nbsp;
 				<cfset ausaFaxes = "415-436-7234|916-554-2900|213-894-7819|619-546-0720|808-541-2958|559-497-4099">
 				<select name="ausa_fax" size="1" tabindex="42">
 					<cfloop list="#ausaFaxes#" delimiters="|" index="fax">
-						#renderOption(fax, ausa_fax)#
+						#dctComponent.renderOption(fax, ausa_fax)#
 					</cfloop>
 				</select>
 			</td>
@@ -208,7 +214,7 @@ function renderOption(value, currentValue = "") {
 				<cfset ausaChiefFnames = "Alex|Derrick|Lee|Robyn-Marie Lyn|Sylvia|Thomas C.">
 				<select name="ausa_chief_fname" size="1" tabindex="44">
 					<cfloop list="#ausaChiefFnames#" delimiters="|" index="fname">
-						#renderOption(fname, ausa_chief_fname)#
+						#dctComponent.renderOption(fname, ausa_chief_fname)#
 					</cfloop>
 				</select>
 			</td>
@@ -223,7 +229,7 @@ function renderOption(value, currentValue = "") {
 				<cfset ausaChiefLnames = "Helper|Monteleone|Quast|Stahl|Tse|Watson|Weidman">
 				<select name="ausa_chief_lname" size="1" tabindex="45">
 					<cfloop list="#ausaChiefLnames#" delimiters="|" index="lname">
-						#renderOption(lname, ausa_chief_lname)#
+						#dctComponent.renderOption(lname, ausa_chief_lname)#
 					</cfloop>
 				</select>
 			</td>
@@ -302,7 +308,7 @@ function renderOption(value, currentValue = "") {
 				<cfset woOffices = "Denver|Long Beach|Salt Lake|San Diego|San Francisco|Seattle">
 				<select name="alo_office" size="1" tabindex="24">
 					<cfloop list="#woOffices#" delimiters="|" index="office">
-						#renderOption(office, alo_office)#
+						#dctComponent.renderOption(office, alo_office)#
 					</cfloop>
 				</select>
 			</td>
@@ -317,7 +323,7 @@ function renderOption(value, currentValue = "") {
 				<cfset woAddr1Options = "1745 Stout Street, Suite 500|300 Long Beach Blvd., Rm 240|9350 South 150 East, Suite 800|11255 Rancho Carmel Dr., Rm 1440|1300 Evans Ave., Rm 217|P.O. Box 3686">
 				<select name="alo_addr1" size="1" tabindex="25">
 					<cfloop list="#woAddr1Options#" delimiters="|" index="addr">
-						#renderOption(addr, alo_addr1)#
+						#dctComponent.renderOption(addr, alo_addr1)#
 					</cfloop>
 				</select>
 			</td>
@@ -336,7 +342,7 @@ function renderOption(value, currentValue = "") {
 				<cfset woAddr2Options = "Denver, CO 80299-5555|Long Beach, CA 90802-2496|Sandy, UT 84070-2716|San Diego, CA 92197-4400|San Francisco, CA 94188-3790|Seattle, WA 98124-3686">
 				<select name="alo_addr2" size="1" tabindex="26">
 					<cfloop list="#woAddr2Options#" delimiters="|" index="addr">
-						#renderOption(addr, alo_addr2)#
+						#dctComponent.renderOption(addr, alo_addr2)#
 					</cfloop>
 				</select>
 			</td>
@@ -351,23 +357,16 @@ function renderOption(value, currentValue = "") {
 				<select name="alo_phone" size="1" tabindex="27">
 					<option value="">Select One...</option>
 					<cfloop list="#woPhones#" delimiters="|" index="phone">
-						#renderOption(phone, alo_phone)#
+						#dctComponent.renderOption(phone, alo_phone)#
 					</cfloop>
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">LR Manager</td>
 			<td>
-				<cfquery name="qry_lr_mgr" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'LRMGR' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="lr_mgr" size="1" tabindex="56">
 					<option value="">Select One...</option>
 					<cfloop query="qry_lr_mgr">
-						#renderOption(qry_lr_mgr.name, lr_mgr)#
+						#dctComponent.renderOption(qry_lr_mgr.name, lr_mgr)#
 					</cfloop>
 				</select>
 			</td>
@@ -381,23 +380,16 @@ function renderOption(value, currentValue = "") {
 				<select name="alo_fax" size="1" tabindex="28">
 					<option value="">Select One...</option>
 					<cfloop list="#woFaxes#" delimiters="|" index="fax">
-						#renderOption(fax, alo_fax)#
+						#dctComponent.renderOption(fax, alo_fax)#
 					</cfloop>
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">HR Manager</td>
 			<td>
-				<cfquery name="qry_hr_mgr" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'HRMGR' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="hr_mgr" size="1" tabindex="57">
 					<option value="">Select One...</option>
 					<cfloop query="qry_hr_mgr">
-						#renderOption(qry_hr_mgr.name, hr_mgr)#
+						#dctComponent.renderOption(qry_hr_mgr.name, hr_mgr)#
 					</cfloop>
 				</select>
 			</td>
@@ -407,33 +399,19 @@ function renderOption(value, currentValue = "") {
 		<tr>
 			<td width="10%" align="right" class="TextMaingr">Attorney</td>
 			<td width="30%">
-				<cfquery name="qry_attorney" datasource="lawmanager">
-					SELECT b.entity_key, b.attorney_name AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'ATTNY' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="attorney_name" size="1" tabindex="29">
 					<option value="">Select One...</option>
 					<cfloop query="qry_attorney">
-						#renderOption(qry_attorney.name, attorney_name)#
+						#dctComponent.renderOption(qry_attorney.name, attorney_name)#
 					</cfloop>
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">District Manager</td>
 			<td>
-				<cfquery name="qry_dist_mgr" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'DMGR' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="dist_mgr" size="1" tabindex="58">
 					<option value="">Select One...</option>
 					<cfloop query="qry_dist_mgr">
-						#renderOption(qry_dist_mgr.name, dist_mgr)#
+						#dctComponent.renderOption(qry_dist_mgr.name, dist_mgr)#
 					</cfloop>
 				</select>
 			</td>
@@ -445,25 +423,18 @@ function renderOption(value, currentValue = "") {
 			<td width="30%">
 				<select name="attorney_title" size="1" tabindex="30">
 					<option value="">Select One...</option>
-					#renderOption("Attorney", attorney_title)#
-					#renderOption("Senior Litigation Counsel", attorney_title)#
-					#renderOption("Managing Counsel", attorney_title)#
-					#renderOption("Deputy Managing Counsel", attorney_title)#
+					#dctComponent.renderOption("Attorney", attorney_title)#
+					#dctComponent.renderOption("Senior Litigation Counsel", attorney_title)#
+					#dctComponent.renderOption("Managing Counsel", attorney_title)#
+					#dctComponent.renderOption("Deputy Managing Counsel", attorney_title)#
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">H&amp;R Mgr - District</td>
 			<td>
-				<cfquery name="qry_hr_mgr_dist" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'HRDST' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="hr_mgr_dist" size="1" tabindex="59">
 					<option value="">Select One...</option>
 					<cfloop query="qry_hr_mgr_dist">
-						#renderOption(qry_hr_mgr_dist.name, hr_mgr_dist)#
+						#dctComponent.renderOption(qry_hr_mgr_dist.name, hr_mgr_dist)#
 					</cfloop>
 				</select>
 			</td>
@@ -473,33 +444,19 @@ function renderOption(value, currentValue = "") {
 		<tr>
 			<td width="10%" align="right" class="TextMaingr">Paralegal</td>
 			<td width="30%">
-				<cfquery name="qry_paralgl" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'PLGL' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="paralgl_name" size="1" tabindex="31">
 					<option value="">Select One...</option>
 					<cfloop query="qry_paralgl">
-						#renderOption(qry_paralgl.name, paralgl_name)#
+						#dctComponent.renderOption(qry_paralgl.name, paralgl_name)#
 					</cfloop>
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">OHNA - District</td>
 			<td>
-				<cfquery name="qry_ohna_dist" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'OHNA' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="ohna_dist" size="1" tabindex="60">
 					<option value="">Select One...</option>
 					<cfloop query="qry_ohna_dist">
-						#renderOption(qry_ohna_dist.name, ohna_dist)#
+						#dctComponent.renderOption(qry_ohna_dist.name, ohna_dist)#
 					</cfloop>
 				</select>
 			</td>

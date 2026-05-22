@@ -1,74 +1,42 @@
 <cfscript>
+	// Instantiate EEOC matterkey pairs component
+	eeocPairsComponent = new components.process_cmft_matterkey_pairs_eeoc_component();
+
 	// -------------------------------------------------------------------------
 	// Template #78 logic: Determine sentence wording based on Comp Rep presence
 	// -------------------------------------------------------------------------
-	if (len(trim(comp_rep_fname)) AND len(trim(comp_rep_lname))
-		AND trim(comp_rep_fname) NEQ "Pro Se" AND trim(comp_rep_lname) NEQ "Pro Se") {
+	if (len(trim(comp_rep_fname)) && len(trim(comp_rep_lname))
+		&& trim(comp_rep_fname) != "Pro Se" && trim(comp_rep_lname) != "Pro Se") {
 		sentence_extra = "If Complainant has never had a work related injury, please initial here __________ to confirm that fact, and return this letter in lieu of the executed authorization.";
 	} else {
 		sentence_extra = "If you have never had a work related injury, please initial here __________ to confirm that fact, and return this letter in lieu of the executed authorization.";
 	}
 
 	// Correct mixed casing for specific attorney name
-	if (attorney_name EQ "Sherilyn Deninno") {
+	if (attorney_name == "Sherilyn Deninno") {
 		attorney_name = "Sherilyn DeNinno";
 	}
-</cfscript>
 
-<!--- Retrieve all relevant template variables for EEOC (matter_type_key = 9) --->
-<cfquery name="qry_cmft_tempvars" datasource="lawmanager">
-	SELECT tempvar_key, tempvar_name
-	FROM lawmanager.cmft_tempvars
-	WHERE (matter_type_key = <cfqueryparam value="9" cfsqltype="cf_sql_integer">
-	       OR matter_type_key = <cfqueryparam value="0" cfsqltype="cf_sql_integer">
-	       OR matter_type_key IS NULL)
-	  AND control IS NULL
-</cfquery>
+	// Retrieve all relevant template variables for EEOC (matter_type_key = 9)
+	qry_cmft_tempvars = eeocPairsComponent.getTempVars();
 
-<!--- Retrieve attorney email from EADDRESS table for the selected attorney name --->
-<cfquery name="qry_attny_email" datasource="lawmanager">
-	SELECT c.eaddress
-	FROM entity a
-	INNER JOIN cmft_entity_wo b ON a.entity_key = b.entity_key
-	INNER JOIN eaddress c ON a.entity_key = c.entity_key
-	WHERE b.attorney_name = <cfqueryparam value="#attorney_name#" cfsqltype="cf_sql_varchar">
-</cfquery>
+	// Retrieve attorney email
+	qry_attny_email = eeocPairsComponent.getAttorneyEmail(attorney_name);
+	attny_email = (qry_attny_email.recordCount > 0) ? qry_attny_email.eaddress : "";
 
-<cfscript>
 	// -------------------------------------------------------------------------
 	// Proper-case transformations for uppercase names before inserts
 	// -------------------------------------------------------------------------
-
-	// Helper: Title-case a string, handling "&" and "'" specially
-	function toProperCase(required string input) {
-		var result = reReplace(lCase(arguments.input), "(^[[:alpha:]]|[[:blank:]][[:alpha:]])", "\U\1\E", "ALL");
-
-		// Handle character after "&"
-		var ampPos = find("&", result, 1);
-		if (ampPos NEQ 0 AND ampPos LT len(result)) {
-			result = left(result, ampPos) & uCase(mid(result, ampPos + 1, 1)) & mid(result, ampPos + 2, len(result) - ampPos - 1);
-		}
-
-		return result;
-	}
-
-	comp_city     = toProperCase(comp_city);
-	comp_facility = toProperCase(comp_facility);
-	comp_district = toProperCase(comp_district);
+	comp_city     = eeocPairsComponent.toProperCase(comp_city);
+	comp_facility = eeocPairsComponent.toProperCase(comp_facility);
+	comp_district = eeocPairsComponent.toProperCase(comp_district);
 
 	// -------------------------------------------------------------------------
 	// Concatenate city/state/zip groups
 	// -------------------------------------------------------------------------
-	function formatCityStateZip(required string city, required string state, required string zip) {
-		if (len(trim(arguments.city)) AND len(trim(arguments.state)) AND len(trim(arguments.zip))) {
-			return trim(arguments.city) & ", " & trim(arguments.state) & " " & trim(arguments.zip);
-		}
-		return trim(arguments.city) & trim(arguments.state) & trim(arguments.zip);
-	}
-
-	aj_citystatezip       = formatCityStateZip(aj_city, aj_state, aj_zip);
-	comp_citystatezip     = formatCityStateZip(comp_city, comp_state, comp_zip);
-	comp_rep_citystatezip = formatCityStateZip(comp_rep_city, comp_rep_state, comp_rep_zip);
+	aj_citystatezip       = eeocPairsComponent.formatCityStateZip(aj_city, aj_state, aj_zip);
+	comp_citystatezip     = eeocPairsComponent.formatCityStateZip(comp_city, comp_state, comp_zip);
+	comp_rep_citystatezip = eeocPairsComponent.formatCityStateZip(comp_rep_city, comp_rep_state, comp_rep_zip);
 
 	// -------------------------------------------------------------------------
 	// Map ALO office to zip code
@@ -86,7 +54,7 @@
 	}
 
 	// Fix known address formatting issue
-	if (isDefined("alo_addr1") AND alo_addr1 EQ "1300 Evans Ave., Rm 217,P.O. Box 883790") {
+	if (isDefined("alo_addr1") && alo_addr1 == "1300 Evans Ave., Rm 217,P.O. Box 883790") {
 		alo_addr1 = "1300 Evans Ave., Rm 217, P.O. Box 883790";
 	}
 
@@ -147,30 +115,25 @@
 		"62":  uCase(aj_citystatezip),
 		"63":  uCase(aj_addr),
 		"116": dateFormat(now(), "mmmm dd, yyyy"),
-		"158": qry_attny_email.eaddress,
+		"158": attny_email,
 		"161": sentence_extra,
 		"162": comp_city,
 		"163": comp_zip
 	};
+
+	// -------------------------------------------------------------------------
+	// Insert all template variable pairs into CMFT_MATTERKEY_PAIRS
+	// -------------------------------------------------------------------------
+	for (row in qry_cmft_tempvars) {
+		currentKey = trim(row.tempvar_key);
+		currentValue = structKeyExists(tempvarValueMap, currentKey) ? tempvarValueMap[currentKey] : "none";
+
+		eeocPairsComponent.insertMatterkeyPair(
+			matterKey      = matterkey,
+			tempvarKeyName = row.tempvar_name,
+			tempvarValue   = currentValue,
+			tempvarKey     = row.tempvar_key,
+			ownerKey       = owner_key
+		);
+	}
 </cfscript>
-
-<!--- Insert all template variable pairs into CMFT_MATTERKEY_PAIRS --->
-<cfloop query="qry_cmft_tempvars">
-
-	<cfset currentKey = trim(qry_cmft_tempvars.tempvar_key)>
-	<cfset currentValue = structKeyExists(tempvarValueMap, currentKey) ? tempvarValueMap[currentKey] : "none">
-
-	<cfquery name="insert_cmft_matterkey_pairs" datasource="lawmanager">
-		INSERT INTO lawmanager.cmft_matterkey_pairs
-			(matter_key, tempvar_key_name, tempvar_value, tempvar_key, date_added, added_by)
-		VALUES (
-			<cfqueryparam value="#matterkey#" cfsqltype="cf_sql_integer">,
-			<cfqueryparam value="#qry_cmft_tempvars.tempvar_name#" cfsqltype="cf_sql_varchar">,
-			<cfqueryparam value="#currentValue#" cfsqltype="cf_sql_varchar">,
-			<cfqueryparam value="#qry_cmft_tempvars.tempvar_key#" cfsqltype="cf_sql_integer">,
-			<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
-			<cfqueryparam value="#owner_key#" cfsqltype="cf_sql_integer" null="#NOT len(trim(owner_key))#">
-		)
-	</cfquery>
-
-</cfloop>
