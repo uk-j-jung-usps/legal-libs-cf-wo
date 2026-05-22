@@ -19,58 +19,25 @@ function parseAjCityStateZip(citystzip) {
 
 // Track whether previously submitted data exists
 hasPriorSubmission = (qry_last_submitted_data.recordCount > 0);
-</cfscript>
 
-<!--- Query AJ's name --->
-<cfquery name="qry_aj" datasource="lawmanager">
-	SELECT b.entity_key,
-		   trim(initcap(b.first_name)) AS first_name,
-		   trim(initcap(b.last_name)) AS last_name
-	FROM lawmanager.matter a
-	INNER JOIN lawmanager.matterentity c ON a.matter_key = c.matter_key
-	INNER JOIN lawmanager.entity b ON b.entity_key = c.entity_key
-	WHERE a.matter_key = <cfqueryparam value="#url.matterkey#" cfsqltype="cf_sql_integer">
-	  AND c.matter_entity_type_key IN (15, 48, 49, 50, 51, 52)
-	ORDER BY c.start_date DESC
-</cfquery>
+// Instantiate admin judge component for data access
+adminJudgeComponent = new components.admin_judge_component();
 
-<!--- Run dependent queries only if AJ found --->
-<cfif qry_aj.recordCount GT 0>
-	<cfquery name="qry_aj_addr" datasource="lawmanager">
-		SELECT a.entity_key,
-			   trim(initcap(b.street)) AS street,
-			   trim(initcap(b.city)) AS city,
-			   b.state,
-			   trim(b.zip_code) AS zip_code
-		FROM lawmanager.entity a
-		INNER JOIN lawmanager.address b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
-	</cfquery>
+// Query AJ's name
+qry_aj = adminJudgeComponent.getAdminJudge(url.matterkey);
 
-	<cfquery name="qry_aj_phone" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS aj_phone
-		FROM lawmanager.entity a
-		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
-		  AND b.phone_type_key IN (2, 3, 4, 6)
-	</cfquery>
+// Run dependent queries only if AJ found
+if (qry_aj.recordCount GT 0) {
+	qry_aj_addr  = adminJudgeComponent.getEntityAddress(qry_aj.entity_key);
+	qry_aj_phone = adminJudgeComponent.getEntityPhone(qry_aj.entity_key, "2,3,4,6");
+	qry_aj_fax   = adminJudgeComponent.getEntityFax(qry_aj.entity_key);
+}
 
-	<cfquery name="qry_aj_fax" datasource="lawmanager">
-		SELECT a.entity_key, trim(b.phone_number) AS aj_fax
-		FROM lawmanager.entity a
-		INNER JOIN lawmanager.phone b ON a.entity_key = b.entity_key
-		WHERE a.entity_key = <cfqueryparam value="#qry_aj.entity_key#" cfsqltype="cf_sql_integer">
-		  AND b.phone_type_key = 5
-	</cfquery>
-</cfif>
-
-<cfscript>
 if (qry_aj.recordCount > 0) {
 
 	aj_fname = qry_aj.first_name;
 	aj_lname = qry_aj.last_name;
 
-	// --- Address ---
 	if (qry_aj_addr.recordCount > 0) {
 		aj_addr  = qry_aj_addr.street;
 		aj_city  = qry_aj_addr.city;
@@ -91,11 +58,11 @@ if (qry_aj.recordCount > 0) {
 	}
 
 	// --- Phone ---
-	aj_phone = (qry_aj_phone.recordCount > 0) ? qry_aj_phone.aj_phone : "";
+	aj_phone = (qry_aj_phone.recordCount > 0) ? qry_aj_phone.phone_number : "";
 
 	// --- Fax ---
 	if (qry_aj_fax.recordCount > 0) {
-		aj_fax = qry_aj_fax.aj_fax;
+		aj_fax = qry_aj_fax.fax_number;
 	} else if (!hasPriorSubmission) {
 		aj_fax = "";
 	}
