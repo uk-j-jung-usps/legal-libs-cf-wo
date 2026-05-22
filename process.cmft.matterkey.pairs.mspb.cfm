@@ -1,70 +1,41 @@
 <cfscript>
+	// Instantiate MSPB matterkey pairs component
+	mspbPairsComponent = new components.process_cmft_matterkey_pairs_mspb_component();
+
 	// -------------------------------------------------------------------------
 	// Conditional sentence for template #78 (appellant rep check)
 	// -------------------------------------------------------------------------
 	if (len(trim(appellant_rep_fname)) && len(trim(appellant_rep_lname))
-		&& trim(appellant_rep_fname) NEQ "Pro Se" && trim(appellant_rep_lname) NEQ "Pro Se") {
+		&& trim(appellant_rep_fname) != "Pro Se" && trim(appellant_rep_lname) != "Pro Se") {
 		sentence_extra = "If Appellant has never had a work related injury, please initial here __________ to confirm that fact, and return this letter in lieu of the executed authorization.";
 	} else {
 		sentence_extra = "If you have never had a work related injury, please initial here __________ to confirm that fact, and return this letter in lieu of the executed authorization.";
 	}
 
 	// Correct mixed casing for specific attorney name
-	if (attorney_name EQ "Sherilyn Deninno") {
+	if (attorney_name == "Sherilyn Deninno") {
 		attorney_name = "Sherilyn DeNinno";
 	}
-</cfscript>
 
-<!--- Retrieve all relevant template variables for MSPB (matter_type_key = 8) --->
-<cfquery name="qry_cmft_tempvars" datasource="lawmanager">
-	SELECT tempvar_key, tempvar_name
-	FROM lawmanager.cmft_tempvars
-	WHERE (matter_type_key = <cfqueryparam value="8" cfsqltype="cf_sql_integer">
-	       OR matter_type_key = <cfqueryparam value="0" cfsqltype="cf_sql_integer">
-	       OR matter_type_key IS NULL)
-	  AND control IS NULL
-</cfquery>
+	// -------------------------------------------------------------------------
+	// Retrieve template variables and attorney email
+	// -------------------------------------------------------------------------
+	qry_cmft_tempvars = mspbPairsComponent.getTempVars();
+	qry_attny_email   = mspbPairsComponent.getAttorneyEmail(attorney_name);
 
-<!--- Retrieve attorney email from EADDRESS table for the selected attorney name --->
-<cfquery name="qry_attny_email" datasource="lawmanager">
-	SELECT c.eaddress
-	FROM lawmanager.entity a
-	INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-	INNER JOIN lawmanager.eaddress c ON a.entity_key = c.entity_key
-	WHERE b.attorney_name = <cfqueryparam value="#attorney_name#" cfsqltype="cf_sql_varchar">
-</cfquery>
-
-<cfscript>
 	// -------------------------------------------------------------------------
 	// Proper-case transformations for uppercase names before inserts
 	// -------------------------------------------------------------------------
-	function toProperCase(required string input) {
-		var result = reReplace(lCase(arguments.input), "(^[[:alpha:]]|[[:blank:]][[:alpha:]])", "\U\1\E", "ALL");
-		// Handle character after "&"
-		var ampPos = find("&", result, 1);
-		if (ampPos NEQ 0 AND ampPos LT len(result)) {
-			result = left(result, ampPos) & uCase(mid(result, ampPos + 1, 1)) & mid(result, ampPos + 2, len(result) - ampPos - 1);
-		}
-		return result;
-	}
-
-	appellant_city     = toProperCase(appellant_city);
-	appellant_facility = toProperCase(appellant_facility);
-	appellant_district = toProperCase(appellant_district);
+	appellant_city     = mspbPairsComponent.toProperCase(appellant_city);
+	appellant_facility = mspbPairsComponent.toProperCase(appellant_facility);
+	appellant_district = mspbPairsComponent.toProperCase(appellant_district);
 
 	// -------------------------------------------------------------------------
 	// Concatenate city/state/zip groups
 	// -------------------------------------------------------------------------
-	function formatCityStateZip(required string city, required string state, required string zip) {
-		if (len(trim(arguments.city)) AND len(trim(arguments.state)) AND len(trim(arguments.zip))) {
-			return trim(arguments.city) & ", " & trim(arguments.state) & " " & trim(arguments.zip);
-		}
-		return trim(arguments.city) & trim(arguments.state) & trim(arguments.zip);
-	}
-
-	aj_citystatezip            = formatCityStateZip(aj_city, aj_state, aj_zip);
-	appellant_citystatezip     = formatCityStateZip(appellant_city, appellant_state, appellant_zip);
-	appellant_rep_citystatezip = formatCityStateZip(appellant_rep_city, appellant_rep_state, appellant_rep_zip);
+	aj_citystatezip            = mspbPairsComponent.formatCityStateZip(aj_city, aj_state, aj_zip);
+	appellant_citystatezip     = mspbPairsComponent.formatCityStateZip(appellant_city, appellant_state, appellant_zip);
+	appellant_rep_citystatezip = mspbPairsComponent.formatCityStateZip(appellant_rep_city, appellant_rep_state, appellant_rep_zip);
 
 	// -------------------------------------------------------------------------
 	// Map ALO office to zip code
@@ -137,30 +108,25 @@
 		"83":  uCase(appellant_fname),
 		"84":  uCase(appellant_lname),
 		"85":  uCase(mspb_office),
-		"158": qry_attny_email.eaddress,
+		"158": (qry_attny_email.recordCount > 0) ? qry_attny_email.eaddress : "",
 		"161": sentence_extra,
 		"164": appellant_city,
 		"165": appellant_zip
 	};
+
+	// -------------------------------------------------------------------------
+	// Insert all template variable pairs into CMFT_MATTERKEY_PAIRS
+	// -------------------------------------------------------------------------
+	for (row in qry_cmft_tempvars) {
+		currentKey   = trim(row.tempvar_key);
+		currentValue = structKeyExists(tempvarValueMap, currentKey) ? tempvarValueMap[currentKey] : "none";
+
+		mspbPairsComponent.insertMatterkeyPair(
+			matterKey    = matterkey,
+			tempvarKeyName = row.tempvar_name,
+			tempvarValue = currentValue,
+			tempvarKey   = row.tempvar_key,
+			ownerKey     = owner_key
+		);
+	}
 </cfscript>
-
-<!--- Insert all template variable pairs into CMFT_MATTERKEY_PAIRS --->
-<cfloop query="qry_cmft_tempvars">
-
-	<cfset currentKey = trim(qry_cmft_tempvars.tempvar_key)>
-	<cfset currentValue = structKeyExists(tempvarValueMap, currentKey) ? tempvarValueMap[currentKey] : "none">
-
-	<cfquery name="insert_cmft_matterkey_pairs" datasource="lawmanager">
-		INSERT INTO lawmanager.cmft_matterkey_pairs
-			(matter_key, tempvar_key_name, tempvar_value, tempvar_key, date_added, added_by)
-		VALUES (
-			<cfqueryparam value="#matterkey#" cfsqltype="cf_sql_integer">,
-			<cfqueryparam value="#qry_cmft_tempvars.tempvar_name#" cfsqltype="cf_sql_varchar">,
-			<cfqueryparam value="#currentValue#" cfsqltype="cf_sql_varchar">,
-			<cfqueryparam value="#qry_cmft_tempvars.tempvar_key#" cfsqltype="cf_sql_integer">,
-			<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
-			<cfqueryparam value="#owner_key#" cfsqltype="cf_sql_integer" null="#NOT len(trim(owner_key))#">
-		)
-	</cfquery>
-
-</cfloop>

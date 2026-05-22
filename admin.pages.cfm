@@ -1,6 +1,6 @@
 <cfscript>
 	// Extract ACE ID from authenticated user
-	aceid = (isDefined("AUTH_USER") AND len(AUTH_USER) GTE 5) ? mid(AUTH_USER, 5, 6) : "";
+	aceid = (isDefined("AUTH_USER") && len(AUTH_USER) >= 5) ? mid(AUTH_USER, 5, 6) : "";
 
 	// Authorized admin users
 	authorizedUsers = "kb23tj,x7xtm0,f24hn0,q204b0,kb7c8g,qchrg0,r8500b,dd32j0,k6gvn0,ysrj00";
@@ -52,11 +52,11 @@
 		</tr>
 	</table>
 
-	<cfif isDefined("confirm_msg") AND len(trim(confirm_msg))>
-		<script>
-			alert("List(s) have been reordered successfully!");
-		</script>
-	</cfif>
+	<cfscript>
+		if (isDefined("confirm_msg") && len(trim(confirm_msg))) {
+			writeOutput('<script>alert("List(s) have been reordered successfully!");</script>');
+		}
+	</cfscript>
 
 </div>
 </cfform>
@@ -66,7 +66,6 @@
 
 <cfelse>
 
-<cfoutput>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,6 +77,5 @@
 	<p>Sorry! You are not authorized to access this Legal Libs Admin page.</p>
 </body>
 </html>
-</cfoutput>
 
 </cfif>

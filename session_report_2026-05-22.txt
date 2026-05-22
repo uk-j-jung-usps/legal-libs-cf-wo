@@ -1,0 +1,99 @@
+Session Report — May 22, 2026
+================================
+
+Summary
+-------
+Systematic migration of inline queries and helper functions from legacy ColdFusion
+.cfm files into centralized CFC component files, with full rewrites of the .cfm
+files to use modern cfscript syntax.
+
+
+Components Created (14 total in components/)
+=============================================
+
+1. admin_judge_component.cfc
+   - getAdminJudge(), getEntityAddress(), getEntityPhone(), getEntityFax()
+
+2. appellant_component.cfc
+   - parseCityStZip(), getAppellant(), getAppellantAddress(), getAppellantPhone(),
+     getAppellantSSN(), getDocketNumber()
+
+3. appellant_rep_component.cfc
+   - parseCityStZip(), getAppellantRep(), getAppellantRepCompany(),
+     getAppellantRepAddress(), getAppellantRepPhone(), getAppellantRepFax()
+
+4. complainant_data_component.cfc
+   - parseCityStateZip(), getComplainant(), getComplainantAddress(),
+     getComplainantPhone(), getComplainantSSN(), getAgencyNumber(), getEeocNumber()
+
+5. complainant_rep_data_component.cfc
+   - parseCityStateZip(), getComplainantRep(), getComplainantRepCompany(),
+     getComplainantRepAddress(), getComplainantRepPhone(), getComplainantRepFax()
+
+6. master_file_display_mspb_component.cfc
+   - renderOption(), getEntityListByRole(), getAttorneyList()
+
+7. master_file_display_eeoc_component.cfc
+   - renderOption(), getEntityListByRole(), getAttorneyList(), getEeocNumberList()
+
+8. master_file_display_dct_component.cfc
+   - renderOption(), getEntityListByRole(), getAttorneyList()
+
+9. process_cmft_matterkey_pairs_mspb_component.cfc
+   - toProperCase(), formatCityStateZip(), getTempVars(), getAttorneyEmail(),
+     insertMatterkeyPair()
+
+10. process_cmft_matterkey_pairs_eeoc_component.cfc
+    - toProperCase(), formatCityStateZip(), getTempVars(), getAttorneyEmail(),
+      insertMatterkeyPair()
+
+11. process_cmft_matterkey_pairs_dct_component.cfc
+    - toProperCase(), formatCityStateZip(), getTempVars(), getAttorneyEmail(),
+      insertMatterkeyPair()
+
+12. ausa_data_component.cfc
+    - getAusa()
+
+13. plaintiff_data_component.cfc
+    - parseCityStZip(), getPlaintiff(), getPlaintiffAddress(), getPlaintiffSSN(),
+      getDocketNumber(), getDefendant()
+
+14. plaintiff_rep_data_component.cfc
+    - parseCityStZip(), getPlaintiffRep(), getPlaintiffRepCompany(),
+      getPlaintiffRepAddress(), getPlaintiffRepPhone(), getPlaintiffRepFax()
+
+
+CFM Files Rewritten (14 files)
+==============================
+
+1.  admin.judge.data.cfm          -> Single <cfscript>, uses adminJudgeComponent
+2.  appellant.data.cfm            -> Single <cfscript>, uses appellantComponent
+3.  appellant.rep.data.cfm        -> Single <cfscript>, uses appellantRepComponent
+4.  complainant.data.cfm          -> Single <cfscript>, uses compComponent
+5.  complainant.rep.data.cfm      -> Single <cfscript>, uses compRepComponent
+6.  ausa.data.cfm                 -> Single <cfscript>, uses ausaComponent
+7.  plaintiff.data.cfm            -> Single <cfscript>, uses plaintiffComponent
+8.  plaintiff.rep.data.cfm        -> Single <cfscript>, uses plaintiffRepComponent
+9.  master.file.detail.display.mspb.cfm  -> Queries pre-fetched, renderOption via mspbComponent
+10. master.file.detail.display.eeoc.cfm  -> Queries pre-fetched, renderOption via eeocComponent
+11. master.file.detail.display.dct.cfm   -> Queries pre-fetched, renderOption via dctComponent
+12. process.cmft.matterkey.pairs.mspb.cfm -> Single <cfscript>, uses mspbPairsComponent
+13. process.cmft.matterkey.pairs.eeoc.cfm -> Single <cfscript>, uses eeocPairsComponent
+14. process.cmft.matterkey.pairs.dct.cfm  -> Single <cfscript>, uses dctPairsComponent
+
+
+Standards Applied
+=================
+
+- All queries use queryExecute() with parameterized bindings (no inline <cfqueryparam>)
+- Modern cfscript operators (!= instead of NEQ, && instead of AND, > instead of GT)
+- XSS protection via encodeForHTMLAttribute() / encodeForHTML()
+- Null-safe email lookups with recordCount > 0 checks
+- try/catch for SSN queries that may fail on restricted tables
+- Single <cfscript> blocks — no mixed tag/script
+
+
+Pending
+=======
+
+- Git push to development branch (needs git pull --rebase origin development first)

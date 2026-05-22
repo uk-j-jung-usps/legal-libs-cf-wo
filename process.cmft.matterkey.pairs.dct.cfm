@@ -1,61 +1,30 @@
 <cfscript>
+	// Instantiate DCT matterkey pairs component
+	dctPairsComponent = new components.process_cmft_matterkey_pairs_dct_component();
+
 	// Correct mixed casing for specific attorney name
-	if (attorney_name EQ "Sherilyn Deninno") {
+	if (attorney_name == "Sherilyn Deninno") {
 		attorney_name = "Sherilyn DeNinno";
 	}
-</cfscript>
 
-<!--- Retrieve all relevant template variables for DCT (matter_type_key = 5) --->
-<cfquery name="qry_cmft_tempvars" datasource="lawmanager">
-	SELECT tempvar_key, tempvar_name
-	FROM lawmanager.cmft_tempvars
-	WHERE (matter_type_key = <cfqueryparam value="5" cfsqltype="cf_sql_integer">
-	       OR matter_type_key = <cfqueryparam value="0" cfsqltype="cf_sql_integer">)
-	  AND control IS NULL
-</cfquery>
+	// Retrieve all relevant template variables for DCT (matter_type_key = 5)
+	qry_cmft_tempvars = dctPairsComponent.getTempVars();
 
-<!--- Retrieve attorney email from EADDRESS table for the selected attorney name --->
-<cfquery name="qry_attny_email" datasource="lawmanager">
-	SELECT c.eaddress
-	FROM lawmanager.entity a
-	INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-	INNER JOIN lawmanager.eaddress c ON a.entity_key = c.entity_key
-	WHERE b.attorney_name = <cfqueryparam value="#attorney_name#" cfsqltype="cf_sql_varchar">
-</cfquery>
+	// Retrieve attorney email
+	qry_attny_email = dctPairsComponent.getAttorneyEmail(attorney_name);
+	attny_email = (qry_attny_email.recordCount > 0) ? qry_attny_email.eaddress : "";
 
-<cfscript>
 	// -------------------------------------------------------------------------
 	// Proper-case transformations for uppercase names before inserts
 	// -------------------------------------------------------------------------
-
-	// Helper: Title-case a string, handling "&" specially
-	function toProperCase(required string input) {
-		var result = reReplace(lCase(arguments.input), "(^[[:alpha:]]|[[:blank:]][[:alpha:]])", "\U\1\E", "ALL");
-
-		// Handle character after "&"
-		var ampPos = find("&", result, 1);
-		if (ampPos NEQ 0 AND ampPos LT len(result)) {
-			result = left(result, ampPos) & uCase(mid(result, ampPos + 1, 1)) & mid(result, ampPos + 2, len(result) - ampPos - 1);
-		}
-
-		return result;
-	}
-
-	plaintiff_facility = toProperCase(plaintiff_facility);
-	plaintiff_district = toProperCase(plaintiff_district);
+	plaintiff_facility = dctPairsComponent.toProperCase(plaintiff_facility);
+	plaintiff_district = dctPairsComponent.toProperCase(plaintiff_district);
 
 	// -------------------------------------------------------------------------
 	// Concatenate city/state/zip groups
 	// -------------------------------------------------------------------------
-	function formatCityStateZip(required string city, required string state, required string zip) {
-		if (len(trim(arguments.city)) AND len(trim(arguments.state)) AND len(trim(arguments.zip))) {
-			return trim(arguments.city) & ", " & trim(arguments.state) & " " & trim(arguments.zip);
-		}
-		return trim(arguments.city) & trim(arguments.state) & trim(arguments.zip);
-	}
-
-	plaintiff_citystzip     = formatCityStateZip(plaintiff_city, plaintiff_state, plaintiff_zip);
-	plaintiff_rep_citystzip = formatCityStateZip(plaintiff_rep_city, plaintiff_rep_state, plaintiff_rep_zip);
+	plaintiff_citystzip     = dctPairsComponent.formatCityStateZip(plaintiff_city, plaintiff_state, plaintiff_zip);
+	plaintiff_rep_citystzip = dctPairsComponent.formatCityStateZip(plaintiff_rep_city, plaintiff_rep_state, plaintiff_rep_zip);
 
 	// -------------------------------------------------------------------------
 	// Map ALO office to zip code
@@ -127,27 +96,22 @@
 		"110": ausa_phone,
 		"111": plaintiff_rep_email,
 		"112": case_no,
-		"158": qry_attny_email.eaddress
+		"158": attny_email
 	};
+
+	// -------------------------------------------------------------------------
+	// Insert all template variable pairs into CMFT_MATTERKEY_PAIRS
+	// -------------------------------------------------------------------------
+	for (row in qry_cmft_tempvars) {
+		currentKey = trim(row.tempvar_key);
+		currentValue = structKeyExists(tempvarValueMap, currentKey) ? tempvarValueMap[currentKey] : "none";
+
+		dctPairsComponent.insertMatterkeyPair(
+			matterKey      = matterkey,
+			tempvarKeyName = row.tempvar_name,
+			tempvarValue   = currentValue,
+			tempvarKey     = row.tempvar_key,
+			ownerKey       = owner_key
+		);
+	}
 </cfscript>
-
-<!--- Insert all template variable pairs into CMFT_MATTERKEY_PAIRS --->
-<cfloop query="qry_cmft_tempvars">
-
-	<cfset currentKey = trim(qry_cmft_tempvars.tempvar_key)>
-	<cfset currentValue = structKeyExists(tempvarValueMap, currentKey) ? tempvarValueMap[currentKey] : "none">
-
-	<cfquery name="insert_cmft_matterkey_pairs" datasource="lawmanager">
-		INSERT INTO lawmanager.cmft_matterkey_pairs
-			(matter_key, tempvar_key_name, tempvar_value, tempvar_key, date_added, added_by)
-		VALUES (
-			<cfqueryparam value="#matterkey#" cfsqltype="cf_sql_integer">,
-			<cfqueryparam value="#qry_cmft_tempvars.tempvar_name#" cfsqltype="cf_sql_varchar">,
-			<cfqueryparam value="#currentValue#" cfsqltype="cf_sql_varchar">,
-			<cfqueryparam value="#qry_cmft_tempvars.tempvar_key#" cfsqltype="cf_sql_integer">,
-			<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp">,
-			<cfqueryparam value="#owner_key#" cfsqltype="cf_sql_integer" null="#NOT len(trim(owner_key))#">
-		)
-	</cfquery>
-
-</cfloop>

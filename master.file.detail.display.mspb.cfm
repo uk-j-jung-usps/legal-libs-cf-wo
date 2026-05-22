@@ -1,9 +1,6 @@
-<cfscript>
-// Helper function: Render a select option with proper selected state
-function renderOption(value, currentValue = "") {
-	var isSelected = (len(trim(arguments.currentValue)) && trim(arguments.currentValue) EQ trim(arguments.value)) ? ' selected="selected"' : '';
-	return '<option value="#encodeForHTMLAttribute(arguments.value)#"#isSelected#>#encodeForHTML(arguments.value)#</option>';
-}
+﻿<cfscript>
+// Instantiate MSPB display component
+mspbComponent = new components.master_file_display_mspb_component();
 </cfscript>
 
 <cfinclude template="submitted.data.mspb.cfm">
@@ -19,6 +16,15 @@ function renderOption(value, currentValue = "") {
 			variables[v] = "";
 		}
 	}
+
+	// Pre-fetch all entity role lists
+	qry_lr_mgr      = mspbComponent.getEntityListByRole("LRMGR");
+	qry_hr_mgr      = mspbComponent.getEntityListByRole("HRMGR");
+	qry_dist_mgr    = mspbComponent.getEntityListByRole("DMGR");
+	qry_hr_mgr_dist = mspbComponent.getEntityListByRole("HRDST");
+	qry_ohna_dist   = mspbComponent.getEntityListByRole("OHNA");
+	qry_paralgl     = mspbComponent.getEntityListByRole("PLGL");
+	qry_attorney    = mspbComponent.getAttorneyList();
 </cfscript>
 
 <!DOCTYPE html>
@@ -40,7 +46,7 @@ function renderOption(value, currentValue = "") {
 <body>
 
 <cfoutput>
-<cfform action="new.save.input.data.cfm" method="post" name="entityform">
+<cfform action="save.input.data.cfm" method="post" name="entityform">
 
 	<input type="hidden" name="matterkey" value="#encodeForHTMLAttribute(url.matterkey)#">
 	<input type="hidden" name="matternumber" value="#encodeForHTMLAttribute(url.matternumber)#">
@@ -66,8 +72,8 @@ function renderOption(value, currentValue = "") {
 			<td width="15%" align="right" class="TextMaingr">Mr. / Ms.</td>
 			<td>
 				<select name="appellant_prefix" size="1" tabindex="1">
-					#renderOption("Mr.", appellant_prefix)#
-					#renderOption("Ms.", appellant_prefix)#
+					#mspbComponent.renderOption("Mr.", appellant_prefix)#
+					#mspbComponent.renderOption("Ms.", appellant_prefix)#
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">AJ First Name</td>
@@ -79,9 +85,9 @@ function renderOption(value, currentValue = "") {
 			<td align="right" class="TextMaingr">he / she / they</td>
 			<td>
 				<select name="appellant_pronoun1" size="1" tabindex="2">
-					#renderOption("he", appellant_pronoun1)#
-					#renderOption("she", appellant_pronoun1)#
-					#renderOption("they", appellant_pronoun1)#
+					#mspbComponent.renderOption("he", appellant_pronoun1)#
+					#mspbComponent.renderOption("she", appellant_pronoun1)#
+					#mspbComponent.renderOption("they", appellant_pronoun1)#
 				</select>
 			</td>
 			<td align="right" class="TextMaingr">AJ Last Name</td>
@@ -93,17 +99,17 @@ function renderOption(value, currentValue = "") {
 			<td align="right" class="TextMaingr">his / her / their</td>
 			<td>
 				<select name="appellant_pronoun2" size="1" tabindex="3">
-					#renderOption("his", appellant_pronoun2)#
-					#renderOption("her", appellant_pronoun2)#
-					#renderOption("their", appellant_pronoun2)#
+					#mspbComponent.renderOption("his", appellant_pronoun2)#
+					#mspbComponent.renderOption("her", appellant_pronoun2)#
+					#mspbComponent.renderOption("their", appellant_pronoun2)#
 				</select>
 			</td>
 			<td width="10%" align="right" class="TextMaingr">AJ Title</td>
 			<td>
 				<select name="aj_title" size="1" tabindex="30">
-					#renderOption("Administrative Judge", aj_title)#
-					#renderOption("Supervisory Administrative Judge", aj_title)#
-					#renderOption("Chief Administrative Judge", aj_title)#
+					#mspbComponent.renderOption("Administrative Judge", aj_title)#
+					#mspbComponent.renderOption("Supervisory Administrative Judge", aj_title)#
+					#mspbComponent.renderOption("Chief Administrative Judge", aj_title)#
 				</select>
 			</td>
 		</tr>
@@ -135,10 +141,10 @@ function renderOption(value, currentValue = "") {
 			<td width="10%" align="right" class="TextMaingr">MSPB Office</td>
 			<td>
 				<select name="mspb_office" size="1" tabindex="35">
-					#renderOption("Western Regional Office", mspb_office)#
-					#renderOption("Denver Field Office", mspb_office)#
-					#renderOption("Los Angeles District", mspb_office)#
-					#renderOption("San Francisco District", mspb_office)#
+					#mspbComponent.renderOption("Western Regional Office", mspb_office)#
+					#mspbComponent.renderOption("Denver Field Office", mspb_office)#
+					#mspbComponent.renderOption("Los Angeles District", mspb_office)#
+					#mspbComponent.renderOption("San Francisco District", mspb_office)#
 				</select>
 			</td>
 		</tr>
@@ -176,17 +182,10 @@ function renderOption(value, currentValue = "") {
 			<td><cfinput type="text" size="15" name="appellant_phone" value="#appellant_phone#" maxlength="15" tabindex="12"></td>
 			<td align="right" class="TextMaingr">LR Manager</td>
 			<td>
-				<cfquery name="qry_lr_mgr" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'LRMGR' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="lr_mgr" size="1" tabindex="38">
 					<option value="">Select One...</option>
 					<cfloop query="qry_lr_mgr">
-						#renderOption(qry_lr_mgr.name, lr_mgr)#
+						#mspbComponent.renderOption(qry_lr_mgr.name, lr_mgr)#
 					</cfloop>
 				</select>
 			</td>
@@ -198,17 +197,10 @@ function renderOption(value, currentValue = "") {
 			<td><cfinput type="text" size="60" name="appellant_facility" value="#appellant_facility#" maxlength="70" tabindex="13"></td>
 			<td align="right" class="TextMaingr">HR Manager</td>
 			<td>
-				<cfquery name="qry_hr_mgr" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'HRMGR' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="hr_mgr" size="1" tabindex="39">
 					<option value="">Select One...</option>
 					<cfloop query="qry_hr_mgr">
-						#renderOption(qry_hr_mgr.name, hr_mgr)#
+						#mspbComponent.renderOption(qry_hr_mgr.name, hr_mgr)#
 					</cfloop>
 				</select>
 			</td>
@@ -220,17 +212,10 @@ function renderOption(value, currentValue = "") {
 			<td><cfinput type="text" size="60" name="appellant_district" value="#appellant_district#" maxlength="60" tabindex="14"></td>
 			<td align="right" class="TextMaingr">District Manager</td>
 			<td>
-				<cfquery name="qry_dist_mgr" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'DMGR' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="dist_mgr" size="1" tabindex="40">
 					<option value="">Select One...</option>
 					<cfloop query="qry_dist_mgr">
-						#renderOption(qry_dist_mgr.name, dist_mgr)#
+						#mspbComponent.renderOption(qry_dist_mgr.name, dist_mgr)#
 					</cfloop>
 				</select>
 			</td>
@@ -242,17 +227,10 @@ function renderOption(value, currentValue = "") {
 			<td><cfinput type="text" size="25" name="docket_no" value="#docket_no#" maxlength="25" tabindex="15"></td>
 			<td align="right" class="TextMaingr">H&amp;R Mgr - District</td>
 			<td>
-				<cfquery name="qry_hr_mgr_dist" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'HRDST' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="hr_mgr_dist" size="1" tabindex="41">
 					<option value="">Select One...</option>
 					<cfloop query="qry_hr_mgr_dist">
-						#renderOption(qry_hr_mgr_dist.name, hr_mgr_dist)#
+						#mspbComponent.renderOption(qry_hr_mgr_dist.name, hr_mgr_dist)#
 					</cfloop>
 				</select>
 			</td>
@@ -264,17 +242,10 @@ function renderOption(value, currentValue = "") {
 			<td><cfinput type="text" size="40" name="appellant_email" value="#appellant_email#" maxlength="40" tabindex="16"></td>
 			<td align="right" class="TextMaingr">OHNA - District</td>
 			<td>
-				<cfquery name="qry_ohna_dist" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'OHNA' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="ohna_dist" size="1" tabindex="42">
 					<option value="">Select One...</option>
 					<cfloop query="qry_ohna_dist">
-						#renderOption(qry_ohna_dist.name, ohna_dist)#
+						#mspbComponent.renderOption(qry_ohna_dist.name, ohna_dist)#
 					</cfloop>
 				</select>
 			</td>
@@ -291,8 +262,8 @@ function renderOption(value, currentValue = "") {
 			<td align="right" class="TextMaingr">Mr. / Ms.</td>
 			<td>
 				<select name="appellant_rep_prefix" size="1" tabindex="17">
-					#renderOption("Mr.", appellant_rep_prefix)#
-					#renderOption("Ms.", appellant_rep_prefix)#
+					#mspbComponent.renderOption("Mr.", appellant_rep_prefix)#
+					#mspbComponent.renderOption("Ms.", appellant_rep_prefix)#
 				</select>
 			</td>
 			<td width="10%" align="right" class="TextMaingr">WO Office</td>
@@ -300,7 +271,7 @@ function renderOption(value, currentValue = "") {
 				<cfset woOffices = "Denver|Long Beach|Salt Lake|San Diego|San Francisco|Seattle">
 				<select name="alo_office" size="1" tabindex="43">
 					<cfloop list="#woOffices#" delimiters="|" index="office">
-						#renderOption(office, alo_office)#
+						#mspbComponent.renderOption(office, alo_office)#
 					</cfloop>
 				</select>
 			</td>
@@ -315,7 +286,7 @@ function renderOption(value, currentValue = "") {
 				<cfset addr1Options = "1745 Stout Street, Suite 500|300 Long Beach Blvd., Rm 240|9350 South 150 East, Suite 800|11255 Rancho Carmel Dr., Rm 1440|1300 Evans Ave., Rm 217|P.O. Box 3686">
 				<select name="alo_addr1" size="1" tabindex="44">
 					<cfloop list="#addr1Options#" delimiters="|" index="addr">
-						#renderOption(addr, alo_addr1)#
+						#mspbComponent.renderOption(addr, alo_addr1)#
 					</cfloop>
 				</select>
 			</td>
@@ -330,7 +301,7 @@ function renderOption(value, currentValue = "") {
 				<cfset addr2Options = "Denver, CO 80299-5555|Long Beach, CA 90802-2496|Sandy, UT 84070-2716|San Diego, CA 92197-4400|San Francisco, CA 94188-3790|Seattle, WA 98124-3686">
 				<select name="alo_addr2" size="1" tabindex="45">
 					<cfloop list="#addr2Options#" delimiters="|" index="addr">
-						#renderOption(addr, alo_addr2)#
+						#mspbComponent.renderOption(addr, alo_addr2)#
 					</cfloop>
 				</select>
 			</td>
@@ -342,17 +313,10 @@ function renderOption(value, currentValue = "") {
 			<td><cfinput type="text" size="25" name="appellant_rep_company" value="#appellant_rep_company#" maxlength="25" tabindex="20"></td>
 			<td width="10%" align="right" class="TextMaingr">Attorney</td>
 			<td width="30%">
-				<cfquery name="qry_attorney" datasource="lawmanager">
-					SELECT b.entity_key, b.attorney_name AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'ATTNY' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="attorney_name" size="1" tabindex="46">
 					<option value="">Select One...</option>
 					<cfloop query="qry_attorney">
-						#renderOption(qry_attorney.name, attorney_name)#
+						#mspbComponent.renderOption(qry_attorney.name, attorney_name)#
 					</cfloop>
 				</select>
 			</td>
@@ -366,10 +330,10 @@ function renderOption(value, currentValue = "") {
 			<td width="30%">
 				<select name="attorney_title" size="1" tabindex="47">
 					<option value="">Select One...</option>
-					#renderOption("Attorney", attorney_title)#
-					#renderOption("Senior Litigation Counsel", attorney_title)#
-					#renderOption("Managing Counsel", attorney_title)#
-					#renderOption("Deputy Managing Counsel", attorney_title)#
+					#mspbComponent.renderOption("Attorney", attorney_title)#
+					#mspbComponent.renderOption("Senior Litigation Counsel", attorney_title)#
+					#mspbComponent.renderOption("Managing Counsel", attorney_title)#
+					#mspbComponent.renderOption("Deputy Managing Counsel", attorney_title)#
 				</select>
 			</td>
 		</tr>
@@ -384,17 +348,10 @@ function renderOption(value, currentValue = "") {
 			</td>
 			<td width="10%" align="right" class="TextMaingr">Paralegal</td>
 			<td width="30%">
-				<cfquery name="qry_paralgl" datasource="lawmanager">
-					SELECT b.entity_key, initcap(first_name) || ' ' || initcap(last_name) AS name
-					FROM lawmanager.entity a
-					INNER JOIN lawmanager.cmft_entity_wo b ON a.entity_key = b.entity_key
-					WHERE b.entity_role = 'PLGL' AND b.group_prefix = 'WO'
-					ORDER BY b.sort_fld
-				</cfquery>
 				<select name="paralgl_name" size="1" tabindex="48">
 					<option value="">Select One...</option>
 					<cfloop query="qry_paralgl">
-						#renderOption(qry_paralgl.name, paralgl_name)#
+						#mspbComponent.renderOption(qry_paralgl.name, paralgl_name)#
 					</cfloop>
 				</select>
 			</td>
@@ -410,7 +367,7 @@ function renderOption(value, currentValue = "") {
 				<select name="alo_phone" size="1" tabindex="49">
 					<option value="">Select One...</option>
 					<cfloop list="#woPhones#" delimiters="|" index="phone">
-						#renderOption(phone, alo_phone)#
+						#mspbComponent.renderOption(phone, alo_phone)#
 					</cfloop>
 				</select>
 			</td>
@@ -426,7 +383,7 @@ function renderOption(value, currentValue = "") {
 				<select name="alo_fax" size="1" tabindex="50">
 					<option value="">Select One...</option>
 					<cfloop list="#woFaxes#" delimiters="|" index="fax">
-						#renderOption(fax, alo_fax)#
+						#mspbComponent.renderOption(fax, alo_fax)#
 					</cfloop>
 				</select>
 			</td>
@@ -442,7 +399,7 @@ function renderOption(value, currentValue = "") {
 				<select name="admin_assist" size="1" tabindex="51">
 					<option value="">Select One...</option>
 					<cfloop list="#assistants#" delimiters="|" index="asst">
-						#renderOption(asst, admin_assist)#
+						#mspbComponent.renderOption(asst, admin_assist)#
 					</cfloop>
 				</select>
 			</td>
